@@ -1,0 +1,280 @@
+<form [formGroup]="caseForm" (ngSubmit)="onSubmit()" class="space-y-6">
+  <!-- Patient & Location -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Patient</span></label
+      >
+      <app-searchable-select
+        [items]="(patients$ | async) || []"
+        bindValue="id"
+        formControlName="patient_id"
+        placeholder="Search patient by name..."
+        [format]="'patient'"
+        (search)="patientSearchInput$.next($event)"
+        [loading]="patientsLoading"
+      >
+      </app-searchable-select>
+      <span
+        *ngIf="isFieldInvalid('patient_id')"
+        class="text-xs text-red-500 mt-1"
+      >
+        {{ getFieldErrorMessage("patient_id") }}
+      </span>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Practice Location</span></label
+      >
+      <app-searchable-select
+        [items]="(practiceLocations$ | async) || []"
+        bindLabel="location_name"
+        bindValue="id"
+        formControlName="practice_location_id"
+        placeholder="Search location..."
+        (search)="locationSearchInput$.next($event)"
+        [loading]="locationsLoading"
+      >
+      </app-searchable-select>
+      <span
+        *ngIf="isFieldInvalid('practice_location_id')"
+        class="text-xs text-red-500 mt-1"
+      >
+        {{ getFieldErrorMessage("practice_location_id") }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Case Category, Type, Priority -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Case Category</span></label
+      >
+      <select
+        class="select select-bordered w-full"
+        formControlName="category"
+        [class.select-error]="isFieldInvalid('category')"
+      >
+        <option [ngValue]="null" disabled>Select category...</option>
+        <option *ngFor="let cat of caseCategories" [value]="cat">
+          {{ cat }}
+        </option>
+      </select>
+      <span
+        *ngIf="isFieldInvalid('category')"
+        class="text-xs text-red-500 mt-1"
+      >
+        {{ getFieldErrorMessage("category") }}
+      </span>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Case Type</span></label
+      >
+      <select
+        class="select select-bordered w-full"
+        formControlName="case_type"
+        [class.select-error]="isFieldInvalid('case_type')"
+      >
+        <option [ngValue]="null" disabled>Select type...</option>
+        <option *ngFor="let type of caseTypes" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+      <span
+        *ngIf="isFieldInvalid('case_type')"
+        class="text-xs text-red-500 mt-1"
+      >
+        {{ getFieldErrorMessage("case_type") }}
+      </span>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Priority</span></label
+      >
+      <select
+        class="select select-bordered w-full"
+        formControlName="priority"
+        [class.select-error]="isFieldInvalid('priority')"
+      >
+        <option *ngFor="let prio of casePriorities" [value]="prio">
+          {{ prio }}
+        </option>
+      </select>
+      <span
+        *ngIf="isFieldInvalid('priority')"
+        class="text-xs text-red-500 mt-1"
+      >
+        {{ getFieldErrorMessage("priority") }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Purpose of Visit -->
+  <div class="form-control w-full">
+    <label class="label"
+      ><span class="label-text font-semibold">Purpose of Visit</span></label
+    >
+    <textarea
+      class="textarea textarea-bordered w-full h-24"
+      [class.textarea-error]="isFieldInvalid('purpose_of_visit')"
+      placeholder="Describe the primary complaint or reason for encounter..."
+      formControlName="purpose_of_visit"
+    ></textarea>
+    <span
+      *ngIf="isFieldInvalid('purpose_of_visit')"
+      class="text-xs text-red-500 mt-1"
+    >
+      {{ getFieldErrorMessage("purpose_of_visit") }}
+    </span>
+  </div>
+
+  <!-- Dates -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Date of Incident</span></label
+      >
+      <input
+        type="date"
+        class="input input-bordered w-full"
+        formControlName="date_of_accident"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Opening Date</span></label
+      >
+      <input
+        type="date"
+        class="input input-bordered w-full"
+        formControlName="opening_date"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Closing Date</span></label
+      >
+      <input
+        type="date"
+        class="input input-bordered w-full"
+        formControlName="closing_date"
+      />
+    </div>
+  </div>
+
+  <!-- Insurance & Firm -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Insurance Provider</span></label
+      >
+      <app-searchable-select
+        [items]="(insurances$ | async) || []"
+        bindLabel="insurance_name"
+        bindValue="id"
+        formControlName="insurance_id"
+        placeholder="Search carrier..."
+        (search)="insuranceSearchInput$.next($event)"
+        [loading]="insurancesLoading"
+      >
+      </app-searchable-select>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Legal Firm</span></label
+      >
+      <app-searchable-select
+        [items]="(firms$ | async) || []"
+        bindLabel="firm_name"
+        bindValue="id"
+        formControlName="firm_id"
+        placeholder="Search firm..."
+        (search)="firmSearchInput$.next($event)"
+        [loading]="firmsLoading"
+      >
+      </app-searchable-select>
+    </div>
+  </div>
+
+  <!-- Referral -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Referred By</span></label
+      >
+      <input
+        type="text"
+        class="input input-bordered w-full"
+        formControlName="referred_by"
+        placeholder="e.g. Self, Doctor, Firm"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold"
+          >Referred Doctor Name</span
+        ></label
+      >
+      <input
+        type="text"
+        class="input input-bordered w-full"
+        formControlName="referred_doctor_name"
+        placeholder="Optional"
+      />
+    </div>
+  </div>
+
+  <!-- Clinical Notes -->
+  <div class="form-control w-full">
+    <label class="label"
+      ><span class="label-text font-semibold">Clinical Notes</span></label
+    >
+    <textarea
+      class="textarea textarea-bordered w-full h-24"
+      placeholder="Additional clinical notes (optional)..."
+      formControlName="clinical_notes"
+    ></textarea>
+  </div>
+
+  <!-- Actions -->
+  <div class="divider"></div>
+
+  <div class="flex items-center justify-between">
+    <button type="button" class="btn btn-ghost" (click)="clearFields()">
+      Clear Fields
+    </button>
+
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        <span
+          *ngIf="isSubmitting"
+          class="loading loading-spinner loading-xs"
+        ></span>
+        {{
+          isSubmitting
+            ? "Saving..."
+            : caseMode === "create"
+              ? "Create Case"
+              : "Update Case"
+        }}
+      </button>
+    </div>
+  </div>
+</form>

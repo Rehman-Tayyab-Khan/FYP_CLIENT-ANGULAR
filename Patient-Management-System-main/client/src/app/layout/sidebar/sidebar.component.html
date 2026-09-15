@@ -1,0 +1,150 @@
+<aside
+  class="fixed left-0 top-0 bottom-0 z-50 flex h-full flex-col bg-slate-900 dark:bg-slate-950 shadow-[0px_0px_12px_rgba(13,148,136,0.2)] transition-all duration-300 ease-out lg:translate-x-0 w-72 sm:w-80"
+  [ngClass]="{
+    'translate-x-0': isMobileOpen,
+    '-translate-x-full': !isMobileOpen,
+    'lg:w-20': isCollapsed,
+    'lg:w-64': !isCollapsed,
+  }"
+>
+  <div class="flex min-h-0 flex-1 flex-col px-4 py-6 lg:px-6 lg:py-8">
+    <div class="mb-8 flex items-center justify-between lg:mb-10">
+      <div class="flex items-center gap-3 overflow-hidden">
+        <div
+          class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary"
+        >
+          <span class="material-symbols-outlined text-lg text-white"
+            >medical_services</span
+          >
+        </div>
+        <div [ngClass]="{ 'lg:hidden': isCollapsed }">
+          <h1 class="text-xl font-bold tracking-tighter text-white">Smart HMS</h1>
+          <p
+            class="text-[10px] font-medium uppercase tracking-widest text-teal-400/80"
+          >
+            Hospital Management
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="hidden h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-slate-800 hover:text-white lg:flex"
+          (click)="onToggleCollapse()"
+          [attr.aria-label]="
+            isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
+          "
+        >
+          <span class="material-symbols-outlined text-lg">
+            {{ isCollapsed ? "right_panel_open" : "left_panel_close" }}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-slate-800 hover:text-white lg:hidden"
+          (click)="onCloseMobileSidebar()"
+          aria-label="Close sidebar"
+        >
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="min-h-0 flex-1 space-y-1 overflow-y-auto pr-1">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.route"
+        (click)="onNavItemClick()"
+        routerLinkActive="text-white bg-teal-500/10 border-l-4 border-teal-500 shadow-[0px_0px_12px_rgba(13,148,136,0.3)]"
+        class="flex items-center gap-3 rounded-lg px-4 py-3 font-inter text-sm font-medium tracking-tight text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+        [ngClass]="{ 'lg:justify-center lg:px-3': isCollapsed }"
+      >
+        <span class="material-symbols-outlined" [attr.data-icon]="item.icon">
+          {{ item.icon }}
+        </span>
+        <span [ngClass]="{ 'lg:hidden': isCollapsed }">{{ item.label }}</span>
+      </a>
+    </nav>
+  </div>
+
+  <div
+    class="shrink-0 border-t-2 border-slate-700/80 bg-slate-900 px-4 py-3 dark:border-slate-700 dark:bg-slate-950 lg:px-6 lg:py-4"
+  >
+    @if (currentUser$ | async; as user) {
+      <div class="mb-3 flex items-center gap-3">
+        <button
+          type="button"
+          class="btn btn-ghost btn-circle avatar flex h-9 w-9 items-center justify-center rounded-full border border-teal-400 bg-teal-500"
+        >
+          <span class="material-symbols-outlined text-lg text-white"
+            >person</span
+          >
+        </button>
+
+        <div class="min-w-0 flex-1" [ngClass]="{ 'lg:hidden': isCollapsed }">
+          <p class="truncate wrap-break-word text-sm font-bold text-white">
+            {{ user.first_name }} {{ user.last_name }}
+          </p>
+          <p
+            class="text-[10px] font-medium uppercase tracking-wider text-teal-400"
+          >
+            {{ user.role }}
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <button
+          (click)="openLogoutConfirm()"
+          class="flex w-full items-center gap-3 rounded-lg px-4 py-2 font-inter text-sm font-medium tracking-tight text-slate-400 transition-colors hover:bg-slate-800 hover:text-red-400"
+          [ngClass]="{ 'lg:justify-center lg:px-3': isCollapsed }"
+        >
+          <span class="material-symbols-outlined text-xl">logout</span>
+          <span [ngClass]="{ 'lg:hidden': isCollapsed }">Logout</span>
+        </button>
+      </div>
+    }
+  </div>
+</aside>
+
+<dialog #logoutConfirmModal class="modal z-100">
+  <div
+    class="modal-box max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"
+  >
+    <h3 class="font-semibold text-base text-slate-900 dark:text-white">
+      Confirm Logout
+    </h3>
+    <p class="py-3 text-sm text-slate-600 dark:text-slate-400">
+      Are you sure you want to log out from your account?
+    </p>
+    <div class="modal-action">
+      <button
+        type="button"
+        class="btn btn-ghost text-slate-700 dark:text-slate-300"
+        [disabled]="isLoggingOut"
+        (click)="closeLogoutConfirm()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-error text-white"
+        [disabled]="isLoggingOut"
+        (click)="logout()"
+      >
+        {{ isLoggingOut ? "Logging out..." : "Logout" }}
+      </button>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button
+      type="button"
+      [disabled]="isLoggingOut"
+      (click)="closeLogoutConfirm()"
+    >
+      close
+    </button>
+  </form>
+</dialog>

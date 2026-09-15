@@ -1,0 +1,455 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 p-5">
+  <ng-container *ngIf="isDoctorRole; else fullVisitForm">
+    <div class="rounded-xl border border-base-300 bg-base-100 p-4 space-y-4">
+      <p class="text-sm text-base-content/70">
+        Doctors can update diagnosis, treatment, prescription, and notes.
+      </p>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Diagnosis</span></label
+        >
+        <div class="space-y-3">
+          <select
+            class="select select-bordered w-full"
+            formControlName="diagnosis_mode"
+          >
+            <option value="existing">Select Existing Diagnosis</option>
+            <option value="new">Add New Diagnosis</option>
+          </select>
+
+          <ng-container
+            *ngIf="form.get('diagnosis_mode')?.value === 'existing'"
+          >
+            <app-searchable-select
+              [items]="(diagnoses$ | async) || []"
+              bindLabel="display_label"
+              bindValue="id"
+              formControlName="diagnoses_id"
+              placeholder="Search diagnosis code or description..."
+              (search)="onDiagnosisSearch($event)"
+              [loading]="diagnosesLoading"
+            >
+            </app-searchable-select>
+            <span
+              *ngIf="isFieldInvalid('diagnoses_id')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("diagnoses_id") }}
+            </span>
+          </ng-container>
+
+          <ng-container *ngIf="form.get('diagnosis_mode')?.value === 'new'">
+            <input
+              type="text"
+              class="input input-bordered w-full"
+              [class.input-error]="isFieldInvalid('diagnosis_icd_code')"
+              formControlName="diagnosis_icd_code"
+              placeholder="Diagnosis code (e.g. A09.9)"
+            />
+            <span
+              *ngIf="isFieldInvalid('diagnosis_icd_code')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("diagnosis_icd_code") }}
+            </span>
+            <textarea
+              class="textarea textarea-bordered w-full h-24"
+              [class.textarea-error]="isFieldInvalid('diagnosis_description')"
+              formControlName="diagnosis_description"
+              placeholder="Diagnosis description"
+            ></textarea>
+            <span
+              *ngIf="isFieldInvalid('diagnosis_description')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("diagnosis_description") }}
+            </span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Treatment</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="treatment"
+        ></textarea>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Prescription</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="prescription"
+        ></textarea>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Notes</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="notes"
+        ></textarea>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #fullVisitForm>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Visit Status</span></label
+        >
+        <select
+          class="select select-bordered w-full"
+          [class.select-error]="isFieldInvalid('visit_status')"
+          formControlName="visit_status"
+        >
+          <option *ngFor="let status of statusOptions" [ngValue]="status">
+            {{ status }}
+          </option>
+        </select>
+        <span
+          *ngIf="isFieldInvalid('visit_status')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("visit_status") }}
+        </span>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold"
+            >Duration (minutes)</span
+          ></label
+        >
+        <input
+          type="number"
+          formControlName="visit_duration_minutes"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Visit Date</span></label
+        >
+        <input
+          type="date"
+          class="input input-bordered w-full"
+          formControlName="visit_date"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Visit Time</span></label
+        >
+        <input
+          type="time"
+          class="input input-bordered w-full"
+          formControlName="visit_time"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Diagnosis Source</span></label
+        >
+        <select
+          class="select select-bordered w-full"
+          formControlName="diagnosis_mode"
+        >
+          <option value="existing">Select Existing Diagnosis</option>
+          <option value="new">Add New Diagnosis</option>
+        </select>
+      </div>
+
+      <div
+        class="form-control w-full"
+        *ngIf="form.get('diagnosis_mode')?.value === 'existing'"
+      >
+        <label class="label"
+          ><span class="label-text font-semibold">Diagnosis</span></label
+        >
+        <app-searchable-select
+          [items]="(diagnoses$ | async) || []"
+          bindLabel="display_label"
+          bindValue="id"
+          formControlName="diagnoses_id"
+          placeholder="Search diagnosis code or description..."
+          (search)="onDiagnosisSearch($event)"
+          [loading]="diagnosesLoading"
+        >
+        </app-searchable-select>
+        <span
+          *ngIf="isFieldInvalid('diagnoses_id')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("diagnoses_id") }}
+        </span>
+      </div>
+
+      <div
+        class="form-control w-full"
+        *ngIf="form.get('diagnosis_mode')?.value === 'new'"
+      >
+        <label class="label"
+          ><span class="label-text font-semibold">Diagnosis Code</span></label
+        >
+        <input
+          type="text"
+          class="input input-bordered w-full"
+          [class.input-error]="isFieldInvalid('diagnosis_icd_code')"
+          formControlName="diagnosis_icd_code"
+          placeholder="e.g. A09.9"
+        />
+        <span
+          *ngIf="isFieldInvalid('diagnosis_icd_code')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("diagnosis_icd_code") }}
+        </span>
+        <label class="label mt-2"
+          ><span class="label-text font-semibold"
+            >Diagnosis Description</span
+          ></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          [class.textarea-error]="isFieldInvalid('diagnosis_description')"
+          formControlName="diagnosis_description"
+          placeholder="Enter diagnosis description"
+        ></textarea>
+        <span
+          *ngIf="isFieldInvalid('diagnosis_description')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("diagnosis_description") }}
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Symptoms</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="symptoms"
+        ></textarea>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Treatment</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="treatment"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Treatment Plan</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="treatment_plan"
+        ></textarea>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Prescription</span></label
+        >
+        <textarea
+          class="textarea textarea-bordered w-full h-24"
+          formControlName="prescription"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Notes</span></label
+      >
+      <textarea
+        class="textarea textarea-bordered w-full h-24"
+        formControlName="notes"
+      ></textarea>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold"
+          >Prescription Documents</span
+        ></label
+      >
+      <textarea
+        class="textarea textarea-bordered w-full h-24"
+        formControlName="prescription_documents_text"
+        placeholder="One document path per line"
+      ></textarea>
+    </div>
+
+    <div class="space-y-3">
+      <label class="label px-0"
+        ><span class="label-text font-semibold">Vital Signs</span></label
+      >
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div class="form-control w-full">
+          <label class="label py-1"
+            ><span class="label-text text-xs">Weight</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="vital_weight"
+            placeholder="e.g. 85 kg"
+          />
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label py-1"
+            ><span class="label-text text-xs">Heart Rate</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="vital_heart_rate"
+            placeholder="e.g. 86 bpm"
+          />
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label py-1"
+            ><span class="label-text text-xs">Temperature</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="vital_temperature"
+            placeholder="e.g. 37.7 C"
+          />
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label py-1"
+            ><span class="label-text text-xs">Blood Pressure</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="vital_blood_pressure"
+            placeholder="e.g. 118/83"
+          />
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label py-1"
+            ><span class="label-text text-xs">Respiratory Rate</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="vital_respiratory_rate"
+            placeholder="e.g. 16/min"
+          />
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label py-1"
+            ><span class="label-text text-xs">Oxygen Saturation</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="vital_oxygen_saturation"
+            placeholder="e.g. 98%"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <label class="label cursor-pointer justify-start gap-3 px-0">
+          <input
+            type="checkbox"
+            class="checkbox"
+            formControlName="follow_up_required"
+          />
+          <span class="label-text font-semibold">Follow-up required</span>
+        </label>
+
+        <div class="form-control w-full">
+          <label class="label"
+            ><span class="label-text font-semibold">Follow-up Date</span></label
+          >
+          <input
+            type="date"
+            class="input input-bordered w-full"
+            formControlName="follow_up_date"
+            [disabled]="!form.get('follow_up_required')?.value"
+          />
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <label class="label cursor-pointer justify-start gap-3 px-0">
+          <input
+            type="checkbox"
+            class="checkbox"
+            formControlName="referral_made"
+          />
+          <span class="label-text font-semibold">Referral made</span>
+        </label>
+
+        <div class="form-control w-full">
+          <label class="label"
+            ><span class="label-text font-semibold">Referral To</span></label
+          >
+          <input
+            type="text"
+            class="input input-bordered w-full"
+            formControlName="referral_to"
+            [disabled]="!form.get('referral_made')?.value"
+          />
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="divider"></div>
+
+  <div class="flex items-center justify-end gap-3">
+    <button
+      type="button"
+      class="btn btn-ghost"
+      (click)="onCancel()"
+      [disabled]="isSubmitting"
+    >
+      Cancel
+    </button>
+
+    <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+      <span
+        *ngIf="isSubmitting"
+        class="loading loading-spinner loading-xs"
+      ></span>
+      {{ isSubmitting ? "Saving..." : "Update Visit" }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,49 @@
+<section class="fixed bottom-24 right-6 z-90 sm:bottom-28 sm:right-8" aria-label="Hospital assistant">
+  <div
+    *ngIf="isOpen"
+    class="mb-3 flex h-[min(32rem,calc(100vh-9rem))] w-[calc(100vw-3rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-2xl"
+  >
+    <header class="flex items-center justify-between bg-primary px-4 py-3 text-primary-content">
+      <div>
+        <h2 class="font-semibold">Hospital Assistant</h2>
+        <p class="text-xs opacity-80">General information only</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm btn-circle text-primary-content" (click)="toggle()" aria-label="Close chat">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </header>
+
+    <div #messageList class="flex-1 space-y-3 overflow-y-auto bg-base-200 p-4" aria-live="polite">
+      <div *ngFor="let item of messages" class="chat" [ngClass]="item.sender === 'user' ? 'chat-end' : 'chat-start'">
+        <div class="chat-bubble max-w-[17rem] whitespace-pre-wrap text-sm" [ngClass]="item.sender === 'user' ? 'chat-bubble-primary' : 'bg-base-100 text-base-content'">
+          {{ item.content }}
+        </div>
+      </div>
+      <div *ngIf="isLoading" class="chat chat-start">
+        <div class="chat-bubble bg-base-100 text-base-content">
+          <span class="loading loading-dots loading-sm"></span>
+        </div>
+      </div>
+    </div>
+
+    <form class="flex gap-2 border-t border-base-300 bg-base-100 p-3" (ngSubmit)="sendMessage()">
+      <input
+        type="text"
+        name="message"
+        [(ngModel)]="message"
+        [disabled]="isLoading"
+        maxlength="1000"
+        class="input input-bordered input-sm min-w-0 flex-1"
+        placeholder="Ask a question..."
+        aria-label="Chat message"
+      />
+      <button type="submit" class="btn btn-primary btn-sm btn-square" [disabled]="!message.trim() || isLoading" aria-label="Send message">
+        <span class="material-symbols-outlined text-lg">send</span>
+      </button>
+    </form>
+  </div>
+
+  <button type="button" class="btn btn-primary btn-circle h-12 w-12 shadow-lg transition-transform hover:scale-105 sm:h-14 sm:w-14" (click)="toggle()" [attr.aria-label]="isOpen ? 'Close hospital assistant' : 'Open hospital assistant'">
+    <span class="material-symbols-outlined text-2xl">{{ isOpen ? 'close' : 'auto_awesome' }}</span>
+  </button>
+</section>

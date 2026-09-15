@@ -1,0 +1,93 @@
+<div class="p-5 space-y-6">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="grid grid-cols-1 gap-6">
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Specialty Name
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('specialty_name')"
+          formControlName="specialty_name"
+          placeholder="Enter specialty name"
+        />
+        <p
+          *ngIf="isFieldInvalid('specialty_name')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("specialty_name") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Description
+          </span>
+        </label>
+        <textarea
+          class="textarea textarea-bordered min-h-28 text-sm w-full"
+          [class.textarea-error]="isFieldInvalid('description')"
+          formControlName="description"
+          placeholder="Optional specialty description"
+        ></textarea>
+        <p
+          *ngIf="isFieldInvalid('description')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("description") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Status
+          </span>
+        </label>
+        <select
+          class="select select-bordered h-10 min-h-0 text-sm w-full"
+          formControlName="is_active"
+        >
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex items-center justify-end gap-3">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        <span
+          *ngIf="isSubmitting"
+          class="loading loading-spinner loading-xs"
+        ></span>
+        {{
+          isSubmitting
+            ? "Saving..."
+            : isEditMode
+              ? "Save Changes"
+              : "Create Specialty"
+        }}
+      </button>
+    </div>
+  </form>
+</div>

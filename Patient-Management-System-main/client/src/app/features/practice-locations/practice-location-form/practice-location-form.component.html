@@ -1,0 +1,191 @@
+<div class="p-5 space-y-6">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full md:col-span-2">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Location Name
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('location_name')"
+          formControlName="location_name"
+          placeholder="Enter location name"
+        />
+        <p
+          *ngIf="isFieldInvalid('location_name')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("location_name") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full md:col-span-2">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Address
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('address')"
+          formControlName="address"
+          placeholder="Enter street address"
+        />
+        <p *ngIf="isFieldInvalid('address')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("address") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            City
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('city')"
+          formControlName="city"
+          placeholder="Enter city"
+        />
+        <p *ngIf="isFieldInvalid('city')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("city") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            State
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('state')"
+          formControlName="state"
+          placeholder="Enter state"
+        />
+        <p *ngIf="isFieldInvalid('state')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("state") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            ZIP
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('zip')"
+          formControlName="zip"
+          placeholder="Enter ZIP"
+        />
+        <p *ngIf="isFieldInvalid('zip')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("zip") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Phone
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('phone')"
+          formControlName="phone"
+          placeholder="Enter contact number"
+        />
+        <p *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("phone") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full md:col-span-2">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Email
+          </span>
+        </label>
+        <input
+          type="email"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('email')"
+          formControlName="email"
+          placeholder="Enter email"
+        />
+        <p *ngIf="isFieldInvalid('email')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("email") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full md:col-span-2">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Status
+          </span>
+        </label>
+        <select
+          class="select select-bordered h-10 min-h-0 text-sm w-full"
+          formControlName="is_active"
+        >
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex items-center justify-end gap-3">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        <span
+          *ngIf="isSubmitting"
+          class="loading loading-spinner loading-xs"
+        ></span>
+        {{
+          isSubmitting
+            ? "Saving..."
+            : isEditMode
+              ? "Save Changes"
+              : "Create Practice Location"
+        }}
+      </button>
+    </div>
+  </form>
+</div>

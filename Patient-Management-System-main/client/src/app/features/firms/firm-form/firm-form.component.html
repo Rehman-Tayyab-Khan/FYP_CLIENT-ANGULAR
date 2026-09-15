@@ -1,0 +1,162 @@
+<div class="p-5 space-y-6">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8">
+    
+    <!-- Section: General Info -->
+    <div class="space-y-4">
+      <h3 class="text-base font-semibold text-base-content flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-xl">corporate_fare</span>
+        General Information
+      </h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Firm Name -->
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Firm Name</span>
+          </label>
+          <input
+            type="text"
+            formControlName="firm_name"
+            placeholder="Enter firm name"
+            class="input input-bordered h-10 text-sm w-full focus:input-primary transition-all"
+            [class.input-error]="isFieldInvalid('firm_name')"
+          />
+          <p *ngIf="isFieldInvalid('firm_name')" class="text-xs text-error mt-1">
+            {{ getFieldErrorMessage('firm_name') }}
+          </p>
+        </div>
+
+        <!-- Firm Type -->
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Firm Type</span>
+          </label>
+          <select
+            formControlName="firm_type"
+            class="select select-bordered h-10 min-h-0 text-sm w-full focus:select-primary transition-all capitalize"
+            [class.select-error]="isFieldInvalid('firm_type')"
+          >
+            <option *ngFor="let type of firmTypes" [value]="type">{{ type }}</option>
+          </select>
+          <p *ngIf="isFieldInvalid('firm_type')" class="text-xs text-error mt-1">
+            {{ getFieldErrorMessage('firm_type') }}
+          </p>
+        </div>
+
+        <!-- Status -->
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Operational Status</span>
+          </label>
+          <select
+            formControlName="is_active"
+            class="select select-bordered h-10 min-h-0 text-sm w-full focus:select-primary transition-all"
+          >
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Contact Details -->
+    <div class="space-y-4">
+      <h3 class="text-base font-semibold text-base-content flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-xl">contact_mail</span>
+        Contact & Location
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Contact Person -->
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Contact Person</span>
+          </label>
+          <input
+            type="text"
+            formControlName="contact_person"
+            placeholder="Enter contact person name"
+            class="input input-bordered h-10 text-sm w-full focus:input-primary transition-all"
+            [class.input-error]="isFieldInvalid('contact_person')"
+          />
+          <p *ngIf="isFieldInvalid('contact_person')" class="text-xs text-error mt-1">
+            {{ getFieldErrorMessage('contact_person') }}
+          </p>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Phone Number</span>
+          </label>
+          <input
+            type="text"
+            formControlName="phone"
+            placeholder="e.g. 03001234567"
+            class="input input-bordered h-10 text-sm w-full focus:input-primary transition-all"
+            [class.input-error]="isFieldInvalid('phone')"
+          />
+          <p *ngIf="isFieldInvalid('phone')" class="text-xs text-error mt-1">
+            {{ getFieldErrorMessage('phone') }}
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div class="form-control w-full md:col-span-2">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Email Address (Optional)</span>
+          </label>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Enter official email"
+            class="input input-bordered h-10 text-sm w-full focus:input-primary transition-all"
+            [class.input-error]="isFieldInvalid('email')"
+          />
+          <p *ngIf="isFieldInvalid('email')" class="text-xs text-error mt-1">
+            {{ getFieldErrorMessage('email') }}
+          </p>
+        </div>
+
+        <!-- Address -->
+        <div class="form-control w-full md:col-span-2">
+          <label class="label pb-1">
+            <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">Full Office Address</span>
+          </label>
+          <textarea
+            formControlName="address"
+            rows="3"
+            placeholder="Enter complete office location"
+            class="textarea textarea-bordered min-h-24 text-sm w-full focus:textarea-primary transition-all"
+            [class.textarea-error]="isFieldInvalid('address')"
+          ></textarea>
+          <p *ngIf="isFieldInvalid('address')" class="text-xs text-error mt-1">
+            {{ getFieldErrorMessage('address') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider my-0"></div>
+
+    <!-- Actions -->
+    <div class="flex items-center justify-end gap-3">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="btn btn-ghost"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary teal-glow min-w-[120px]"
+        [disabled]="isSubmitting"
+      >
+        <span *ngIf="isSubmitting" class="loading loading-spinner loading-xs"></span>
+        {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Create Firm') }}
+      </button>
+    </div>
+  </form>
+</div>

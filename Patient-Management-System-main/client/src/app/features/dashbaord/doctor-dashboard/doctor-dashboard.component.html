@@ -1,0 +1,227 @@
+<div class="mb-10" *ngIf="!loading">
+  <h2 class="text-3xl font-extrabold tracking-tight text-base-content">
+    Doctor Command Center
+  </h2>
+  <p class="text-base-content/70 mt-1 font-medium">
+    Personal clinical workload, schedule, and patient care snapshot.
+  </p>
+</div>
+
+<div
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-8"
+  *ngIf="stats"
+>
+  <div class="bg-base-100 p-5 rounded-xl border-l-4 border-primary shadow-sm">
+    <p
+      class="text-base-content/70 text-xs font-bold uppercase tracking-widest mb-1"
+    >
+      Today's Appointments
+    </p>
+    <p class="text-3xl font-extrabold text-base-content tracking-tight">
+      {{ stats.todayAppointmentsCount }}
+    </p>
+  </div>
+
+  <div class="bg-base-100 p-5 rounded-xl border-l-4 border-info shadow-sm">
+    <p
+      class="text-base-content/70 text-xs font-bold uppercase tracking-widest mb-1"
+    >
+      Completed Visits
+    </p>
+    <p class="text-3xl font-extrabold text-base-content tracking-tight">
+      {{ stats.completedVisitsCount }}
+    </p>
+  </div>
+
+  <div class="bg-base-100 p-5 rounded-xl border-l-4 border-accent shadow-sm">
+    <p
+      class="text-base-content/70 text-xs font-bold uppercase tracking-widest mb-1"
+    >
+      Active Cases
+    </p>
+    <p class="text-3xl font-extrabold text-base-content tracking-tight">
+      {{ stats.activeCasesCount }}
+    </p>
+  </div>
+
+  <div class="bg-base-100 p-5 rounded-xl border-l-4 border-secondary shadow-sm">
+    <p
+      class="text-base-content/70 text-xs font-bold uppercase tracking-widest mb-1"
+    >
+      My Patients
+    </p>
+    <p class="text-3xl font-extrabold text-base-content tracking-tight">
+      {{ stats.myPatientsCount }}
+    </p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8" *ngIf="stats">
+  <div class="lg:col-span-2 bg-base-100 p-8 rounded-xl shadow-sm">
+    <h3 class="text-lg font-bold text-base-content">
+      My Appointment Trend (14 Days)
+    </h3>
+    <p class="text-sm text-base-content/70 mb-6">
+      Daily appointment volume for your schedule
+    </p>
+
+    <div class="h-64 flex items-end gap-1 w-full relative">
+      <div
+        class="absolute inset-0 flex flex-col justify-between pointer-events-none"
+      >
+        <div class="border-b border-base-300 w-full h-0"></div>
+        <div class="border-b border-base-300 w-full h-0"></div>
+        <div class="border-b border-base-300 w-full h-0"></div>
+        <div class="border-b border-base-300 w-full h-0"></div>
+      </div>
+
+      <div
+        *ngFor="let day of stats.appointmentsTrend"
+        class="flex-1 bg-primary/20 rounded-t-sm hover:bg-primary transition-all duration-300 group relative"
+        [style.height.%]="(day.count / maxTrendCount) * 100"
+      >
+        <div
+          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-neutral text-neutral-content text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20"
+        >
+          {{ day.count }} on {{ day.date | date: "MMM d" }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-base-100 p-8 rounded-xl shadow-sm">
+    <h3 class="text-lg font-bold text-base-content">
+      Status Breakdown (30 Days)
+    </h3>
+    <p class="text-sm text-base-content/70 mb-6">
+      How your appointments are distributed
+    </p>
+
+    <div
+      class="space-y-3"
+      *ngIf="stats.statusBreakdown.length > 0; else noStatuses"
+    >
+      <div
+        *ngFor="let item of stats.statusBreakdown"
+        class="flex items-center justify-between rounded-lg bg-base-200 px-3 py-2"
+      >
+        <span class="text-sm font-medium text-base-content/90">{{
+          item.status
+        }}</span>
+        <span class="badge badge-outline">{{ item.count }}</span>
+      </div>
+    </div>
+
+    <ng-template #noStatuses>
+      <p class="text-sm text-base-content/70">
+        No appointment status data yet.
+      </p>
+    </ng-template>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8" *ngIf="stats">
+  <div class="bg-base-100 rounded-xl shadow-sm overflow-hidden">
+    <div class="p-6 flex justify-between items-center bg-base-200/50">
+      <h3 class="text-lg font-bold text-base-content">Upcoming Appointments</h3>
+      <span
+        class="text-xs font-bold text-base-content/70 uppercase tracking-wider"
+        >Next 5</span
+      >
+    </div>
+
+    <div
+      class="divide-y divide-base-300"
+      *ngIf="stats.upcomingAppointments.length > 0; else noUpcoming"
+    >
+      <div
+        *ngFor="let appointment of stats.upcomingAppointments"
+        class="p-5 flex items-center justify-between hover:bg-base-200 transition-colors"
+      >
+        <div>
+          <p class="text-sm font-bold text-base-content">
+            {{ appointment.patient_name }}
+          </p>
+          <p class="text-xs text-base-content/70 mt-1">
+            {{ appointment.appointment_number }}
+            <span *ngIf="appointment.case_number"
+              >• {{ appointment.case_number }}</span
+            >
+          </p>
+          <p class="text-xs text-base-content/70 mt-1">
+            {{ appointment.appointment_date | date: "MMM d, y" }} at
+            {{ appointment.appointment_time }}
+          </p>
+        </div>
+        <span
+          class="badge badge-outline"
+          [ngClass]="statusBadgeClass(appointment.status)"
+        >
+          {{ appointment.status }}
+        </span>
+      </div>
+    </div>
+
+    <ng-template #noUpcoming>
+      <div class="p-6 text-sm text-base-content/70">
+        No upcoming appointments.
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="bg-base-100 rounded-xl shadow-sm overflow-hidden">
+    <div class="p-6 bg-neutral flex justify-between items-center">
+      <h3 class="text-lg font-bold text-neutral-content">Recent Visits</h3>
+      <span class="text-xs font-bold text-accent uppercase tracking-wider"
+        >Latest 5</span
+      >
+    </div>
+
+    <div
+      class="divide-y divide-base-300"
+      *ngIf="stats.recentVisits.length > 0; else noVisits"
+    >
+      <div
+        *ngFor="let visit of stats.recentVisits"
+        class="p-5 hover:bg-base-200 transition-colors"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-bold text-base-content">
+              {{ visit.patient_name }}
+            </p>
+            <p class="text-xs text-base-content/70 mt-1">
+              {{ visit.visit_number }} •
+              {{ visit.visit_date | date: "MMM d, y" }}
+            </p>
+            <p class="text-xs text-base-content/70 mt-1">
+              Diagnosis: {{ visit.diagnoses_name || "-" }}
+            </p>
+          </div>
+          <span
+            class="badge badge-outline"
+            [ngClass]="statusBadgeClass(visit.visit_status)"
+          >
+            {{ visit.visit_status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noVisits>
+      <div class="p-6 text-sm text-base-content/70">
+        No recent visits recorded.
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div
+  class="flex flex-col items-center justify-center min-h-80 space-y-4"
+  *ngIf="loading"
+>
+  <span class="loading loading-spinner loading-lg text-primary"></span>
+  <p class="text-base-content/70 font-medium animate-pulse">
+    Loading doctor dashboard...
+  </p>
+</div>

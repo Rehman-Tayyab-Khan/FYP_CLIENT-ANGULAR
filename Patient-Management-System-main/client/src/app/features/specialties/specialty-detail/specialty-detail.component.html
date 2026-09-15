@@ -1,0 +1,120 @@
+<div class="flex-1 w-full max-w-6xl mx-auto p-6 md:p-8 space-y-6">
+  <div
+    *ngIf="loading"
+    class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70"
+  >
+    Loading specialty details...
+  </div>
+
+  <div *ngIf="!loading && specialty as s">
+    <div class="flex m items-center mb-10 justify-between gap-4 mt-8">
+      <div class="flex items-center gap-6">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="btn btn-ghost btn-circle"
+          title="Back to Specialties"
+        >
+          <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+
+        <div class="space-y-1">
+          <p
+            class="text-xs uppercase tracking-widest font-semibold text-base-content/60"
+          >
+            Specialty Detail
+          </p>
+          <h1 class="text-2xl md:text-3xl font-bold text-base-content">
+            {{ s.specialty_name }}
+          </h1>
+          <p class="text-sm text-base-content/70">Specialty ID: {{ s.id }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="badge badge-outline uppercase"
+          [ngClass]="statusBadgeClass"
+        >
+          {{ statusLabel }}
+        </span>
+      </div>
+    </div>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <h2 class="text-lg font-semibold text-base-content">Overview</h2>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Specialty Name
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ s.specialty_name }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Status
+          </p>
+          <p class="text-lg font-semibold text-base-content capitalize">
+            {{ statusLabel }}
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4">
+        <p class="text-xs uppercase tracking-wide text-base-content/60 mb-2">
+          Description
+        </p>
+        <p class="font-medium text-base-content whitespace-pre-line">
+          {{ s.description || "-" }}
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <h2 class="text-lg font-semibold text-base-content">Audit Metadata</h2>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Created At
+          </p>
+          <p class="font-medium text-base-content">
+            {{ s.created_at ? (s.created_at | date: "medium") : "-" }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Updated At
+          </p>
+          <p class="font-medium text-base-content">
+            {{ s.updated_at ? (s.updated_at | date: "medium") : "-" }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Specialty ID
+          </p>
+          <p class="font-medium text-base-content break-all">{{ s.id }}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div *ngIf="!specialty && !loading">
+    <div
+      class="rounded-xl border border-error/30 bg-error/10 p-6 text-sm text-error"
+    >
+      Specialty record was not found.
+    </div>
+  </div>
+</div>

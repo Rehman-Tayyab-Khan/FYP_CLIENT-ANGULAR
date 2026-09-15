@@ -1,0 +1,502 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <ng-container *ngIf="doctorStatusOnlyMode; else fullAppointmentForm">
+    <div class="rounded-xl border border-base-300 bg-base-100 p-4 space-y-3">
+      <p class="text-sm text-base-content/70">
+        Doctors can only update appointment status.
+      </p>
+
+      <label class="form-control w-full">
+        <span class="label-text font-semibold">Status</span>
+        <select
+          class="select select-bordered w-full"
+          formControlName="status"
+          [class.select-error]="isFieldInvalid('status')"
+        >
+          <option value="">Select status</option>
+          <option *ngFor="let status of doctorStatusOptions" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+        <span
+          *ngIf="isFieldInvalid('status')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("status") }}
+        </span>
+      </label>
+
+      <div
+        *ngIf="isCompletionStatusSelected"
+        class="mt-4 rounded-xl border border-base-300 bg-base-200/40 p-4 space-y-4"
+      >
+        <p class="text-sm font-semibold text-base-content">
+          Visit Details (Required for Completion)
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Diagnosis Source</span>
+            <select
+              class="select select-bordered w-full"
+              formControlName="diagnosis_mode"
+            >
+              <option value="existing">Select Existing ICD Code</option>
+              <option value="new">Create New Diagnosis</option>
+            </select>
+          </label>
+
+          <label class="form-control w-full">
+            <span class="label-text font-semibold"
+              >Visit Duration (minutes)</span
+            >
+            <input
+              type="number"
+              class="input input-bordered w-full"
+              formControlName="visit_duration_minutes"
+            />
+          </label>
+        </div>
+
+        <div *ngIf="completionMode === 'existing'" class="space-y-3">
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-semibold">Diagnosis ICD Code</span>
+            </label>
+            <input
+              type="text"
+              class="input input-bordered w-full mb-2"
+              placeholder="Search ICD code or diagnosis..."
+              (input)="onDiagnosisSearch($event)"
+            />
+            <select
+              class="select select-bordered w-full"
+              formControlName="diagnoses_id"
+              [class.select-error]="isFieldInvalid('diagnoses_id')"
+            >
+              <option value="">Select diagnosis</option>
+              <option
+                *ngFor="let diagnosis of (diagnoses$ | async) || []"
+                [value]="diagnosis.id"
+              >
+                {{ diagnosis.display_label }}
+              </option>
+            </select>
+            <span
+              *ngIf="isFieldInvalid('diagnoses_id')"
+              class="block text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("diagnoses_id") }}
+            </span>
+          </div>
+
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Diagnosis Description</span>
+            <textarea
+              class="textarea textarea-bordered w-full h-20"
+              formControlName="diagnosis_description"
+              readonly
+            ></textarea>
+          </label>
+        </div>
+
+        <div
+          *ngIf="completionMode === 'new'"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">New ICD Code</span>
+            <input
+              type="text"
+              class="input input-bordered w-full"
+              formControlName="diagnosis_icd_code"
+              placeholder="e.g. Z99.1"
+            />
+            <span
+              *ngIf="isFieldInvalid('diagnosis_icd_code')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("diagnosis_icd_code") }}
+            </span>
+          </label>
+
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Diagnosis Active</span>
+            <select
+              class="select select-bordered w-full"
+              formControlName="diagnosis_is_active"
+            >
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+          </label>
+
+          <label class="form-control w-full md:col-span-2">
+            <span class="label-text font-semibold">Diagnosis Description</span>
+            <textarea
+              class="textarea textarea-bordered w-full h-24"
+              formControlName="diagnosis_description"
+            ></textarea>
+            <span
+              *ngIf="isFieldInvalid('diagnosis_description')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("diagnosis_description") }}
+            </span>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Symptoms</span>
+            <textarea
+              class="textarea textarea-bordered w-full h-20"
+              formControlName="symptoms"
+            ></textarea>
+            <span
+              *ngIf="isFieldInvalid('symptoms')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("symptoms") }}
+            </span>
+          </label>
+
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Treatment</span>
+            <textarea
+              class="textarea textarea-bordered w-full h-20"
+              formControlName="treatment"
+            ></textarea>
+            <span
+              *ngIf="isFieldInvalid('treatment')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("treatment") }}
+            </span>
+          </label>
+
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Treatment Plan</span>
+            <textarea
+              class="textarea textarea-bordered w-full h-20"
+              formControlName="treatment_plan"
+            ></textarea>
+          </label>
+
+          <label class="form-control w-full">
+            <span class="label-text font-semibold">Prescription</span>
+            <textarea
+              class="textarea textarea-bordered w-full h-20"
+              formControlName="prescription"
+            ></textarea>
+            <span
+              *ngIf="isFieldInvalid('prescription')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("prescription") }}
+            </span>
+          </label>
+        </div>
+
+        <label class="form-control w-full">
+          <span class="label-text font-semibold">Visit Notes</span>
+          <textarea
+            class="textarea textarea-bordered w-full h-24"
+            formControlName="visit_notes"
+          ></textarea>
+          <span
+            *ngIf="isFieldInvalid('visit_notes')"
+            class="text-xs text-red-500 mt-1"
+          >
+            {{ getFieldErrorMessage("visit_notes") }}
+          </span>
+        </label>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+            class="rounded-lg border border-base-300 bg-base-100 p-3 space-y-3"
+          >
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                class="checkbox"
+                formControlName="follow_up_required"
+              />
+              <span class="font-semibold text-base-content"
+                >Follow-up required</span
+              >
+            </label>
+            <label class="form-control w-full">
+              <span class="text-sm font-semibold mb-1">Follow-up Date</span>
+              <input
+                type="date"
+                class="input input-bordered w-full"
+                formControlName="follow_up_date"
+                [disabled]="!form.get('follow_up_required')?.value"
+                [class.input-disabled]="!form.get('follow_up_required')?.value"
+              />
+              <span
+                *ngIf="isFieldInvalid('follow_up_date')"
+                class="block text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("follow_up_date") }}
+              </span>
+            </label>
+          </div>
+
+          <div
+            class="rounded-lg border border-base-300 bg-base-100 p-3 space-y-3"
+          >
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                class="checkbox"
+                formControlName="referral_made"
+              />
+              <span class="font-semibold text-base-content">Referral made</span>
+            </label>
+            <label class="form-control w-full">
+              <span class="text-sm font-semibold mb-1">Referral To</span>
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                formControlName="referral_to"
+                [disabled]="!form.get('referral_made')?.value"
+                [class.input-disabled]="!form.get('referral_made')?.value"
+              />
+              <span
+                *ngIf="isFieldInvalid('referral_to')"
+                class="block text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("referral_to") }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #fullAppointmentForm>
+    <div class="grid grid-cols-1 gap-6">
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Case</span></label
+        >
+        <app-searchable-select
+          [items]="(cases$ | async) || []"
+          bindLabel="display_label"
+          bindValue="id"
+          formControlName="case_id"
+          placeholder="Search case by number..."
+          (search)="onCaseSearch($event)"
+          [loading]="casesLoading"
+        >
+        </app-searchable-select>
+        <span
+          *ngIf="isFieldInvalid('case_id')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("case_id") }}
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Doctor</span></label
+        >
+        <app-searchable-select
+          [items]="(doctors$ | async) || []"
+          bindLabel="display_label"
+          bindValue="id"
+          formControlName="doctor_id"
+          placeholder="Search doctor by name..."
+          (search)="onDoctorSearch($event)"
+          [loading]="doctorsLoading"
+        >
+        </app-searchable-select>
+        <span
+          *ngIf="isFieldInvalid('doctor_id')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("doctor_id") }}
+        </span>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold">Specialty</span></label
+        >
+        <app-searchable-select
+          [items]="(specialties$ | async) || []"
+          bindLabel="specialty_name"
+          bindValue="id"
+          formControlName="specialty_id"
+          placeholder="Search specialty..."
+          (search)="onSpecialtySearch($event)"
+          [loading]="specialtiesLoading"
+        >
+        </app-searchable-select>
+        <span
+          *ngIf="isFieldInvalid('specialty_id')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("specialty_id") }}
+        </span>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label"
+          ><span class="label-text font-semibold"
+            >Practice Location</span
+          ></label
+        >
+        <app-searchable-select
+          [items]="(practiceLocations$ | async) || []"
+          bindLabel="location_name"
+          bindValue="id"
+          formControlName="practice_location_id"
+          placeholder="Search location..."
+          (search)="onLocationSearch($event)"
+          [loading]="locationsLoading"
+        >
+        </app-searchable-select>
+        <span
+          *ngIf="isFieldInvalid('practice_location_id')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("practice_location_id") }}
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <label class="form-control w-full">
+        <span class="label-text font-semibold">Appointment Date</span>
+        <input
+          type="date"
+          formControlName="appointment_date"
+          class="input input-bordered w-full"
+          [class.input-error]="isFieldInvalid('appointment_date')"
+        />
+        <span
+          *ngIf="isFieldInvalid('appointment_date')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("appointment_date") }}
+        </span>
+      </label>
+
+      <label class="form-control w-full">
+        <span class="label-text font-semibold">Appointment Time</span>
+        <input
+          type="time"
+          formControlName="appointment_time"
+          class="input input-bordered w-full"
+          [class.input-error]="isFieldInvalid('appointment_time')"
+        />
+        <span
+          *ngIf="isFieldInvalid('appointment_time')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("appointment_time") }}
+        </span>
+      </label>
+
+      <label class="form-control w-full">
+        <span class="label-text font-semibold">Appointment Type</span>
+        <select
+          class="select select-bordered w-full"
+          formControlName="appointment_type"
+          [class.select-error]="isFieldInvalid('appointment_type')"
+        >
+          <option *ngFor="let type of appointmentTypeOptions" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+        <span
+          *ngIf="isFieldInvalid('appointment_type')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("appointment_type") }}
+        </span>
+      </label>
+
+      <label class="form-control w-full">
+        <span class="label-text font-semibold">Duration (minutes)</span>
+        <input
+          type="number"
+          formControlName="duration_minutes"
+          class="input input-bordered w-full"
+          [class.input-error]="isFieldInvalid('duration_minutes')"
+        />
+        <span
+          *ngIf="isFieldInvalid('duration_minutes')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("duration_minutes") }}
+        </span>
+      </label>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Reason for Visit</span></label
+      >
+      <textarea
+        class="textarea textarea-bordered w-full h-24"
+        [class.textarea-error]="isFieldInvalid('reason_for_visit')"
+        formControlName="reason_for_visit"
+        placeholder="Describe the primary reason for this appointment..."
+      ></textarea>
+      <span
+        *ngIf="isFieldInvalid('reason_for_visit')"
+        class="text-xs text-red-500 mt-1"
+      >
+        {{ getFieldErrorMessage("reason_for_visit") }}
+      </span>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label"
+        ><span class="label-text font-semibold">Notes</span></label
+      >
+      <textarea
+        class="textarea textarea-bordered w-full h-24"
+        [class.textarea-error]="isFieldInvalid('notes')"
+        formControlName="notes"
+        placeholder="Additional notes (optional)..."
+      ></textarea>
+      <span *ngIf="isFieldInvalid('notes')" class="text-xs text-red-500 mt-1">
+        {{ getFieldErrorMessage("notes") }}
+      </span>
+    </div>
+  </ng-template>
+
+  <div class="divider"></div>
+
+  <div class="flex items-center justify-end gap-3">
+    <button
+      type="button"
+      class="btn btn-ghost"
+      (click)="onCancel()"
+      [disabled]="isSubmitting"
+    >
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+      <span
+        *ngIf="isSubmitting"
+        class="loading loading-spinner loading-xs"
+      ></span>
+      {{
+        isSubmitting
+          ? "Saving..."
+          : isEditMode
+            ? "Update Appointment"
+            : "Create Appointment"
+      }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,328 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'); */
+@import "tailwindcss";
+@import "material-symbols/outlined.css";
+
+@plugin "daisyui" {
+  themes:
+    smart-hms-light --default,
+    smart-hms-dark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "smart-hms-light";
+  default: true;
+
+  /* Primary teal accent */
+  --color-primary: oklch(55.6% 0.12 186.7); /* #00685f */
+  --color-primary-content: oklch(98.5% 0.01 180); /* #f4fffc */
+
+  /* Secondary navs/tags */
+  --color-secondary: oklch(45% 0.06 250); /* #565e74 */
+  --color-secondary-content: oklch(100% 0 0); /* #ffffff */
+
+  /* Secondary Accent/Teal Action */
+  --color-accent: oklch(61% 0.14 186); /* #0D9488 */
+  --color-accent-content: oklch(100% 0 0); /* #ffffff */
+
+  /* Structural Navy (Sidebar) */
+  --color-neutral: oklch(21% 0.04 250); /* #131b2e */
+  --color-neutral-content: oklch(96% 0 0); /* #eff1f3 */
+
+  /* Background Tiers */
+  --color-base-100: oklch(100% 0 0); /* #ffffff - lowest */
+  --color-base-200: oklch(98% 0 0); /* #f7f9fb - low */
+  --color-base-300: oklch(95% 0 0); /* #eceef0 - container */
+  --color-base-content: oklch(20% 0 0); /* #191c1e */
+
+  /* Status/Functional */
+  --color-info: oklch(60% 0.18 250); /* #3b82f6 */
+  --color-info-content: oklch(100% 0 0);
+  --color-success: oklch(67% 0.16 150); /* #10b981 */
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(75% 0.18 70); /* #f59e0b */
+  --color-warning-content: oklch(20% 0 0);
+  --color-error: oklch(48% 0.2 30); /* #ba1a1a */
+  --color-error-content: oklch(100% 0 0);
+
+  /* Shared Radii/Borders */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem; /* md in tailwind */
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+
+  /* Custom smart-hms tokens */
+  --smart-hms-sidebar-bg: oklch(21% 0.04 250); /* #131b2e */
+  --smart-hms-sidebar-text: oklch(100% 0 0);
+  --smart-hms-sidebar-active-bg: oklch(55.6% 0.12 186.7 / 10%);
+  --smart-hms-sidebar-active-text: oklch(100% 0 0);
+  --smart-hms-outline: oklch(80% 0.02 180 / 15%); /* ghost border */
+}
+
+@plugin "daisyui/theme" {
+  name: "smart-hms-dark";
+
+  /* Primary teal accent (adjusted for dark mode visibility) */
+  --color-primary: oklch(84% 0.12 186); /* #6bd8cb */
+  --color-primary-content: oklch(20% 0.05 180); /* #00201d */
+
+  --color-secondary: oklch(60% 0.06 250);
+  --color-secondary-content: oklch(15% 0 0);
+
+  --color-accent: oklch(75% 0.14 186);
+  --color-accent-content: oklch(15% 0 0);
+
+  --color-neutral: oklch(35% 0.04 250);
+  --color-neutral-content: oklch(96% 0 0);
+
+  /* Background Tiers */
+  --color-base-100: oklch(21% 0.04 250); /* Deep Navy Canvas */
+  --color-base-200: oklch(23% 0.04 250); /* Slightly lighter navy */
+  --color-base-300: oklch(28% 0.04 250); /* Slate-800 level */
+  --color-base-content: oklch(90% 0.01 250); /* Light slate text */
+
+  /* Status/Functional */
+  --color-info: oklch(60% 0.18 250);
+  --color-info-content: oklch(100% 0 0);
+  --color-success: oklch(67% 0.16 150);
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(75% 0.18 70);
+  --color-warning-content: oklch(20% 0 0);
+  --color-error: oklch(65% 0.2 30);
+  --color-error-content: oklch(100% 0 0);
+
+  /* Shared Variables */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+
+  /* Custom smart-hms tokens */
+  --smart-hms-sidebar-bg: oklch(15% 0.04 250); /* even deeper navy */
+  --smart-hms-sidebar-text: oklch(95% 0 0);
+  --smart-hms-sidebar-active-bg: oklch(84% 0.12 186 / 10%);
+  --smart-hms-sidebar-active-text: oklch(84% 0.12 186);
+  --smart-hms-outline: oklch(50% 0.02 180 / 15%);
+}
+
+/* Global Styles based on Design Reference */
+body {
+  font-family: "Inter", sans-serif;
+  @apply bg-base-200 text-base-content antialiased tracking-normal;
+}
+
+.glass-header {
+  @apply bg-base-100/80 backdrop-blur-md border-b border-base-300/50;
+}
+
+.status-badge {
+  @apply px-3 py-1 text-[10px] font-bold rounded-sm border-l-[3px] uppercase tracking-wider;
+}
+
+.teal-glow {
+  box-shadow: 0px 0px 12px rgba(13, 148, 136, 0.3);
+}
+
+.teal-glow-hover:hover {
+  box-shadow: 0px 0px 12px rgba(13, 148, 136, 0.5);
+}
+
+.ambient-shadow {
+  box-shadow: 0px 32px 64px -12px rgba(15, 23, 42, 0.12);
+}
+
+/* Clean up scrollbars for data tables */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Ensure all input, select, and textarea elements globally use the primary color on focus. */
+.input:focus,
+.input:focus-within,
+.select:focus,
+.select:focus-within,
+.textarea:focus,
+.textarea:focus-within,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 8px rgba(13, 148, 136, 0.2) !important;
+}
+
+/* Fallback override: keep ngx-datatable header readable in dark theme. */
+[data-theme="smart-hms-dark"] .ngx-datatable.material .datatable-header {
+  background: var(--color-neutral) !important;
+  border-bottom: 1px solid
+    color-mix(in oklab, var(--color-neutral-content) 16%, transparent) !important;
+}
+
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .datatable-header-cell-template-wrap,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .datatable-header-cell-label,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .datatable-header-cell-label
+  *,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .sort-btn {
+  color: var(--color-neutral-content) !important;
+  opacity: 1 !important;
+}
+
+/* Force dark row hover/active states for ngx-datatable material theme. */
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:hover,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:hover
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:focus,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:focus
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:hover:not(.row-disabled),
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:hover:not(.row-disabled)
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:focus:not(.row-disabled),
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:focus:not(.row-disabled)
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-body-row,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-body-cell,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:hover,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:hover
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:hover,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:hover
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:hover,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:hover
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:focus,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:focus
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:focus,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:focus
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:focus,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:focus
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:not(.row-disabled),
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:not(.row-disabled)
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:hover:not(.row-disabled),
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:hover:not(.row-disabled)
+  .datatable-row-group,
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:focus:not(.row-disabled),
+[data-theme="smart-hms-dark"]
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:focus:not(.row-disabled)
+  .datatable-row-group {
+  background-color: var(--color-base-300) !important;
+  color: var(--color-base-content) !important;
+}

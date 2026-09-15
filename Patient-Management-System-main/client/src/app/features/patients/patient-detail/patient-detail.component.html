@@ -1,0 +1,225 @@
+<div class="flex-1 w-full max-w-6xl mx-auto p-6 md:p-8 space-y-6">
+  <div
+    *ngIf="loading"
+    class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70"
+  >
+    Loading patient details...
+  </div>
+
+  <div *ngIf="!loading && patient as p">
+    <div class="flex items-center justify-between gap-4 mt-8">
+      <div class="flex items-center gap-6">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="btn btn-ghost btn-circle"
+          title="Back to Patients"
+        >
+          <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+        <div class="space-y-1">
+          <p
+            class="text-xs uppercase tracking-widest font-semibold text-base-content/60"
+          >
+            Patient Profile
+          </p>
+          <h1 class="text-2xl md:text-3xl font-bold text-base-content">
+            {{ fullName }}
+          </h1>
+          <p class="text-sm text-base-content/70">Patient ID: {{ p.id }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="badge badge-success badge-outline uppercase">{{
+          p.patient_status
+        }}</span>
+      </div>
+    </div>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <div class="flex flex-col md:flex-row md:items-center gap-6">
+        <div
+          class="w-16 h-16 rounded-2xl bg-primary text-primary-content grid place-content-center text-xl font-bold"
+        >
+          {{ initials }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">
+              Age
+            </p>
+            <p class="text-lg font-semibold text-base-content">{{ age }}</p>
+          </div>
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">
+              Gender
+            </p>
+            <p class="text-lg font-semibold text-base-content capitalize">
+              {{ p.gender }}
+            </p>
+          </div>
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">
+              DOB
+            </p>
+            <p class="text-lg font-semibold text-base-content">
+              {{ p.date_of_birth }}
+            </p>
+          </div>
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">
+              Registered
+            </p>
+            <p class="text-lg font-semibold text-base-content">
+              {{ p.registration_date | date: "mediumDate" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <section
+        class="xl:col-span-2 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm space-y-6"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Contact Information
+          </h2>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Email
+              </p>
+              <p class="font-medium text-base-content break-all">
+                {{ p.email || "-" }}
+              </p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Phone
+              </p>
+              <p class="font-medium text-base-content">{{ p.phone || "-" }}</p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Mobile
+              </p>
+              <p class="font-medium text-base-content">{{ p.mobile || "-" }}</p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Preferred Language
+              </p>
+              <p class="font-medium text-base-content">
+                {{ p.preferred_language || "-" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Address</h2>
+          <div
+            class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-2"
+          >
+            <p class="font-medium text-base-content">{{ p.address || "-" }}</p>
+            <p class="text-base-content/80">
+              {{ p.city || "-" }}, {{ p.state || "-" }} {{ p.zip_code || "-" }}
+            </p>
+            <p class="text-base-content/80">{{ p.country || "-" }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm space-y-6"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Emergency Contact
+          </h2>
+          <div
+            class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-2"
+          >
+            <p class="font-medium text-base-content">
+              {{ p.emergency_contact_name || "-" }}
+            </p>
+            <p class="text-base-content/80">
+              {{ p.emergency_contact_phone || "-" }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Insurance</h2>
+          <div
+            class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-2"
+          >
+            <p class="text-sm text-base-content/70">Provider</p>
+            <p class="font-medium text-base-content">
+              {{ p.insurance_provider || "-" }}
+            </p>
+            <p class="text-sm text-base-content/70 pt-2">Policy Number</p>
+            <p class="font-medium text-base-content">
+              {{ p.insurance_policy_number || "-" }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Primary Physician
+          </h2>
+          <div class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="font-medium text-base-content">
+              {{ p.primary_physician || "-" }}
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <h2 class="text-lg font-semibold text-base-content">Recent Visits</h2>
+        <span class="badge badge-primary badge-outline"
+          >{{ recentVisits.length }} Records</span
+        >
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="table table-zebra">
+          <thead>
+            <tr class="text-base-content/70">
+              <th>Date</th>
+              <th>Visit Type</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let visit of recentVisits" class="text-base-content">
+              <td>{{ visit.date }}</td>
+              <td>{{ visit.type }}</td>
+              <td>{{ visit.department }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div *ngIf="!patient && !loading">
+    <div
+      class="rounded-xl border border-error/30 bg-error/10 p-6 text-sm text-error"
+    >
+      Patient record was not found.
+    </div>
+  </div>
+</div>

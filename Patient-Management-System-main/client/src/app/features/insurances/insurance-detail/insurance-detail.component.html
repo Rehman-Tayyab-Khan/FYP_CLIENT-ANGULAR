@@ -1,0 +1,157 @@
+<div class="flex-1 w-full max-w-6xl mx-auto p-6 md:p-8 space-y-6">
+  <div
+    *ngIf="loading"
+    class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70"
+  >
+    Loading insurance details...
+  </div>
+
+  <div *ngIf="!loading && insurance as i">
+    <div class="flex items-center justify-between gap-4 mt-8">
+      <div class="flex items-center gap-6">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="btn btn-ghost btn-circle"
+          title="Back to Insurances"
+        >
+          <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+
+        <div class="space-y-1">
+          <p
+            class="text-xs uppercase tracking-widest font-semibold text-base-content/60"
+          >
+            Insurance Detail
+          </p>
+          <h1 class="text-2xl md:text-3xl font-bold text-base-content">
+            {{ i.insurance_name }}
+          </h1>
+          <p class="text-sm text-base-content/70">Insurance ID: {{ i.id }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="badge badge-outline uppercase"
+          [ngClass]="statusBadgeClass"
+        >
+          {{ statusLabel }}
+        </span>
+      </div>
+    </div>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <h2 class="text-lg font-semibold text-base-content">Overview</h2>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Insurance Name
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ i.insurance_name }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Insurance Code
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ i.insurance_code }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Status
+          </p>
+          <p class="text-lg font-semibold text-base-content capitalize">
+            {{ statusLabel }}
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4">
+        <p class="text-xs uppercase tracking-wide text-base-content/60 mb-3">
+          Insurance Addresses
+        </p>
+
+        <div
+          *ngIf="addresses.length === 0"
+          class="text-sm text-base-content/70"
+        >
+          No addresses available.
+        </div>
+
+        <div *ngIf="addresses.length > 0" class="space-y-3">
+          <div
+            *ngFor="let address of addresses; let idx = index"
+            class="rounded-lg border border-base-300 bg-base-100 p-3"
+          >
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <p class="text-sm font-semibold text-base-content">
+                Address {{ idx + 1 }}
+              </p>
+              <span
+                *ngIf="address.is_primary"
+                class="badge badge-success badge-outline uppercase"
+                >Primary</span
+              >
+            </div>
+            <p class="font-medium text-base-content whitespace-pre-line">
+              {{ address.address || "-" }}
+            </p>
+            <p class="text-sm text-base-content/70 mt-2">
+              Phone: {{ address.phone || "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <h2 class="text-lg font-semibold text-base-content">Audit Metadata</h2>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Created At
+          </p>
+          <p class="font-medium text-base-content">
+            {{ i.created_at ? (i.created_at | date: "medium") : "-" }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Updated At
+          </p>
+          <p class="font-medium text-base-content">
+            {{ i.updated_at ? (i.updated_at | date: "medium") : "-" }}
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Insurance ID
+          </p>
+          <p class="font-medium text-base-content break-all">{{ i.id }}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div *ngIf="!insurance && !loading">
+    <div
+      class="rounded-xl border border-error/30 bg-error/10 p-6 text-sm text-error"
+    >
+      Insurance record was not found.
+    </div>
+  </div>
+</div>

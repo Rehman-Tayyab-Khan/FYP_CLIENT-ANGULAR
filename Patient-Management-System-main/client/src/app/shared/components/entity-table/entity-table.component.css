@@ -1,0 +1,372 @@
+.entity-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+::ng-deep .ngx-datatable.material {
+  border: 1px solid var(--color-base-300);
+  border-radius: 0.75rem;
+  background: var(--color-base-100);
+  box-shadow: none !important;
+  overflow: hidden;
+  width: 100%;
+  min-width: 720px;
+}
+
+::ng-deep .ngx-datatable.material .datatable-header {
+  background: var(--color-neutral) !important;
+  border-bottom: 1px solid
+    color-mix(in oklab, var(--color-neutral-content) 16%, transparent) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-header .datatable-header-cell,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .datatable-header-cell-template-wrap {
+  color: var(--color-neutral-content) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-header .datatable-header-cell {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-neutral-content) !important;
+}
+
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .datatable-header-cell-label,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .datatable-header-cell-label
+  * {
+  color: var(--color-neutral-content) !important;
+  opacity: 1 !important;
+}
+
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .sort-btn,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .datatable-header-cell
+  .resize-handle {
+  color: var(--color-neutral-content) !important;
+  opacity: 1 !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-header .entity-table-header-cell {
+  background: var(--color-neutral) !important;
+  border-right: 1px solid
+    color-mix(in oklab, var(--color-neutral-content) 10%, transparent);
+  opacity: 1 !important;
+}
+
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .entity-table-header-cell:last-child {
+  border-right: none;
+}
+
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .entity-table-header-cell
+  .entity-table-header-text,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-header
+  .entity-table-header-cell
+  .entity-table-header-text
+  * {
+  color: var(--color-neutral-content) !important;
+  opacity: 1 !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row {
+  background: var(--color-base-100) !important;
+  border-bottom: 1px solid var(--color-base-300);
+  cursor: pointer;
+}
+
+::ng-deep .ngx-datatable.material .datatable-row-even .datatable-body-row,
+::ng-deep .ngx-datatable.material .datatable-body-row.datatable-row-even {
+  background: var(--color-base-200) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row .datatable-body-cell,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-body-row
+  .datatable-body-cell
+  .datatable-body-cell-label {
+  color: var(--color-base-content) !important;
+}
+
+/* Override ngx-datatable material theme row states with matching specificity. */
+::ng-deep
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:hover,
+::ng-deep
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:hover
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:focus,
+::ng-deep
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:focus
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:hover:not(.row-disabled),
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:hover:not(.row-disabled)
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:focus:not(.row-disabled),
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell:focus:not(.row-disabled)
+  .datatable-row-group,
+::ng-deep .ngx-datatable.material .datatable-row-wrapper:hover,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-body-row,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-body-cell {
+  background-color: var(--color-base-300) !important;
+  color: var(--color-base-content) !important;
+}
+
+::ng-deep .ngx-datatable.material.single-selection .datatable-body-row.active,
+::ng-deep
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+::ng-deep .ngx-datatable.material.multi-selection .datatable-body-row.active,
+::ng-deep
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active,
+::ng-deep
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:hover,
+::ng-deep
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:hover
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:hover,
+::ng-deep
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:hover
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:hover,
+::ng-deep
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:hover
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:focus,
+::ng-deep
+  .ngx-datatable.material.single-selection
+  .datatable-body-row.active:focus
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:focus,
+::ng-deep
+  .ngx-datatable.material.multi-selection
+  .datatable-body-row.active:focus
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:focus,
+::ng-deep
+  .ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active:focus
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:not(.row-disabled),
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:not(.row-disabled)
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:hover:not(.row-disabled),
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:hover:not(.row-disabled)
+  .datatable-row-group,
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:focus:not(.row-disabled),
+::ng-deep
+  .ngx-datatable.material.cell-selection
+  .datatable-body-cell.active:focus:not(.row-disabled)
+  .datatable-row-group {
+  background-color: var(--color-base-300) !important;
+  color: var(--color-base-content) !important;
+}
+
+::ng-deep
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-body-row,
+::ng-deep .ngx-datatable.material .datatable-body-row.active,
+::ng-deep .ngx-datatable.material .datatable-body-row.active:hover,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-row-wrapper.active
+  .datatable-body-row,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-row-wrapper:hover
+  .datatable-body-row.datatable-row-even {
+  background: var(--color-base-300) !important;
+}
+
+::ng-deep
+  .ngx-datatable.material
+  .datatable-body-row:hover
+  .datatable-body-cell,
+::ng-deep
+  .ngx-datatable.material
+  .datatable-body-row:hover
+  .datatable-body-cell
+  .datatable-body-cell-label {
+  color: var(--color-base-content) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row .badge.badge-success {
+  background: var(--color-success) !important;
+  border-color: var(--color-success) !important;
+  color: var(--color-success-content) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row .badge.badge-neutral {
+  background: var(--color-neutral) !important;
+  border-color: var(--color-neutral) !important;
+  color: var(--color-neutral-content) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row .badge.badge-info {
+  background: var(--color-info) !important;
+  border-color: var(--color-info) !important;
+  color: var(--color-info-content) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row .badge.badge-error {
+  background: var(--color-error) !important;
+  border-color: var(--color-error) !important;
+  color: var(--color-error-content) !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-row .badge.badge-ghost {
+  background: var(--color-base-200) !important;
+  border-color: var(--color-base-300) !important;
+  color: var(--color-base-content) !important;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  white-space: nowrap;
+}
+
+.entity-table-header-label {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entity-table-cell-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+::ng-deep .ngx-datatable.material .datatable-body-cell-label {
+  overflow: visible;
+}
+
+::ng-deep .ngx-datatable.material .datatable-footer {
+  color: var(--color-base-content) !important;
+  border-top: none;
+}
+
+::ng-deep .ngx-datatable.material .datatable-header-inner {
+  width: 100% !important;
+}
+
+::ng-deep .ngx-datatable.material .datatable-row-center,
+::ng-deep .ngx-datatable.material .datatable-body,
+::ng-deep .ngx-datatable.material .datatable-header-inner {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+@media (max-width: 1024px) {
+  ::ng-deep .ngx-datatable.material {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .ngx-datatable.material {
+    min-width: 560px;
+  }
+
+  .entity-table-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+
+  .entity-table-footer-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

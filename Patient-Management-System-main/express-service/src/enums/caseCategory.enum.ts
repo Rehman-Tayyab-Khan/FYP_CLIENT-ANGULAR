@@ -1,0 +1,17 @@
+export enum CaseCategory {
+  GENERAL_MEDICINE = "General Medicine",
+  SURGERY = "Surgery",
+  PEDIATRICS = "Pediatrics",
+  CARDIOLOGY = "Cardiology",
+  ORTHOPEDICS = "Orthopedics",
+  NEUROLOGY = "Neurology",
+  DERMATOLOGY = "Dermatology",
+  GYNECOLOGY = "Gynecology",
+  OPHTHALMOLOGY = "Ophthalmology",
+  ENT = "ENT",
+  DENTAL = "Dental",
+  PSYCHIATRY = "Psychiatry",
+  PHYSICAL_THERAPY = "Physical Therapy",
+  EMERGENCY = "Emergency",
+  OTHER = "Other",
+}

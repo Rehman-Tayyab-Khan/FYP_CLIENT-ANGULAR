@@ -1,0 +1,303 @@
+<div class="p-5 space-y-6">
+  <div
+    *ngIf="loading"
+    class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70"
+  >
+    Loading doctor profile...
+  </div>
+
+  <form
+    *ngIf="!loading"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="space-y-6"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            First Name
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          formControlName="first_name"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Last Name
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          formControlName="last_name"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Phone
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          formControlName="phone"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Status
+          </span>
+        </label>
+        <select
+          class="select select-bordered h-10 min-h-0 text-sm w-full"
+          formControlName="is_active"
+        >
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Email
+          </span>
+        </label>
+        <input
+          type="email"
+          class="input input-bordered h-10 text-sm w-full"
+          formControlName="email"
+        />
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            {{ isCreateMode ? "Password" : "New Password" }}
+          </span>
+        </label>
+        <input
+          type="password"
+          class="input input-bordered h-10 text-sm w-full"
+          formControlName="password"
+          maxlength="100"
+          autocomplete="new-password"
+          [placeholder]="
+            !isCreateMode ? 'Leave blank to keep current password' : ''
+          "
+        />
+        <span class="label" *ngIf="!isCreateMode">
+          <span class="label-text-alt text-xs text-base-content/60">
+            Optional. Use 6 to 100 characters.
+          </span>
+        </span>
+        <span
+          class="label"
+          *ngIf="form.get('password')?.touched && form.get('password')?.errors"
+        >
+          <span
+            class="label-text-alt text-error"
+            *ngIf="form.get('password')?.errors?.['minlength']"
+          >
+            Password must be at least 6 characters.
+          </span>
+          <span
+            class="label-text-alt text-error"
+            *ngIf="form.get('password')?.errors?.['maxlength']"
+          >
+            Password cannot exceed 100 characters.
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="text-base font-semibold text-base-content">
+        Professional Details
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span
+              class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+            >
+              Specialty
+            </span>
+          </label>
+          <app-searchable-select
+            [items]="specialties"
+            bindLabel="specialty_name"
+            bindValue="id"
+            formControlName="specialty_id"
+            placeholder="Select specialty"
+            (search)="onSpecialtySearch($event)"
+            [loading]="specialtiesLoading"
+          >
+          </app-searchable-select>
+        </div>
+
+        <div class="form-control w-full">
+          <label class="label pb-1">
+            <span
+              class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+            >
+              Practice Location
+            </span>
+          </label>
+          <app-searchable-select
+            [items]="practiceLocations"
+            bindLabel="location_name"
+            bindValue="id"
+            formControlName="practice_location_id"
+            placeholder="Select location"
+            (search)="onPracticeLocationSearch($event)"
+            [loading]="practiceLocationsLoading"
+          >
+          </app-searchable-select>
+        </div>
+
+        <div class="form-control w-full md:col-span-2">
+          <label class="label pb-1">
+            <span
+              class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+            >
+              License Number
+            </span>
+          </label>
+          <input
+            type="text"
+            class="input input-bordered h-10 text-sm w-full"
+            formControlName="license_number"
+          />
+        </div>
+
+        <div class="form-control w-full md:col-span-2">
+          <label class="label pb-1">
+            <span
+              class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+            >
+              Bio
+            </span>
+          </label>
+          <textarea
+            class="textarea textarea-bordered min-h-24 text-sm"
+            formControlName="bio"
+            placeholder="Short professional profile"
+          ></textarea>
+        </div>
+
+        <div class="form-control w-full md:col-span-2">
+          <label class="label pb-1">
+            <span
+              class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+            >
+              Weekly Availability
+            </span>
+          </label>
+
+          <div class="space-y-3">
+            <div
+              *ngFor="let day of dayAvailability"
+              class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center rounded-xl border border-base-300 bg-base-100 p-3"
+            >
+              <label
+                class="md:col-span-4 label justify-start gap-3 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  class="checkbox checkbox-sm"
+                  [checked]="day.enabled"
+                  (change)="toggleDay(day.key, $any($event.target).checked)"
+                />
+                <span class="text-sm font-medium">{{ day.label }}</span>
+              </label>
+
+              <div class="md:col-span-4">
+                <select
+                  class="select select-bordered h-10 min-h-0 text-sm w-full"
+                  [disabled]="!day.enabled"
+                  [value]="day.start"
+                  (change)="
+                    updateDayTime(day.key, 'start', $any($event.target).value)
+                  "
+                >
+                  <option *ngFor="let time of timeOptions" [value]="time">
+                    {{ time }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="md:col-span-4">
+                <select
+                  class="select select-bordered h-10 min-h-0 text-sm w-full"
+                  [disabled]="!day.enabled"
+                  [value]="day.end"
+                  (change)="
+                    updateDayTime(day.key, 'end', $any($event.target).value)
+                  "
+                >
+                  <option *ngFor="let time of timeOptions" [value]="time">
+                    {{ time }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <span class="label" *ngIf="scheduleError">
+            <span class="label-text-alt text-error">{{ scheduleError }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex items-center justify-end gap-3">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        <span
+          *ngIf="isSubmitting"
+          class="loading loading-spinner loading-xs"
+        ></span>
+        {{
+          isSubmitting
+            ? "Saving..."
+            : isCreateMode
+              ? "Create Doctor"
+              : "Save Changes"
+        }}
+      </button>
+    </div>
+  </form>
+</div>

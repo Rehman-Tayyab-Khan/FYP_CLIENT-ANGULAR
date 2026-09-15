@@ -1,0 +1,170 @@
+<div class="entity-table-container">
+  <ngx-datatable
+    class="material w-full"
+    [rows]="rows"
+    [columnMode]="'force'"
+    [headerHeight]="56"
+    [footerHeight]="56"
+    [rowHeight]="64"
+    [scrollbarH]="true"
+    [externalPaging]="true"
+    [count]="totalCount"
+    [offset]="pageOffset"
+    [limit]="pageSize"
+    [loadingIndicator]="loading"
+    (activate)="onRowActivate($event)"
+    (page)="onPage($event)"
+  >
+    <ngx-datatable-column
+      *ngFor="let col of columns"
+      [name]="col.name"
+      [prop]="col.prop"
+      [sortable]="true"
+      [headerClass]="'entity-table-header-cell'"
+      [canAutoResize]="!col.width"
+      [flexGrow]="col.width ? 0 : 1"
+      [minWidth]="col.minWidth ?? 140"
+      [width]="col.width"
+    >
+      <ng-template
+        ngx-datatable-header-template
+        let-column="column"
+        let-sort="sortFn"
+      >
+        <button
+          type="button"
+          class="entity-table-header-text inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-base-content"
+          (click)="sort()"
+          [attr.aria-label]="'Sort by ' + column.name"
+        >
+          <span class="entity-table-header-label" [attr.title]="column.name">{{
+            column.name
+          }}</span>
+          <span class="material-symbols-outlined text-sm leading-none"
+            >unfold_more</span
+          >
+        </button>
+      </ng-template>
+
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <ng-container [ngSwitch]="col.type">
+          <span
+            *ngSwitchCase="'status'"
+            class="badge badge-sm capitalize"
+            [ngClass]="statusBadgeClass(value)"
+          >
+            {{ value }}
+          </span>
+          <span
+            *ngSwitchCase="'date'"
+            class="entity-table-cell-text"
+            [attr.title]="value | date: 'MMM d, y'"
+            >{{ value | date: "MMM d, y" }}</span
+          >
+          <span
+            *ngSwitchDefault
+            class="entity-table-cell-text"
+            [attr.title]="value"
+            >{{ value }}</span
+          >
+        </ng-container>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      name="Actions"
+      [sortable]="false"
+      [draggable]="false"
+      [resizeable]="false"
+      [canAutoResize]="false"
+      [flexGrow]="0"
+      [headerClass]="'entity-table-header-cell'"
+      [minWidth]="210"
+      [width]="240"
+    >
+      <ng-template ngx-datatable-header-template let-column="column">
+        <span
+          class="entity-table-header-text text-xs font-bold uppercase tracking-widest text-base-content"
+          [attr.title]="column.name"
+        >
+          {{ column.name }}
+        </span>
+      </ng-template>
+
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="action-buttons" (click)="$event.stopPropagation()">
+          <button
+            *ngIf="showUpdateAction"
+            type="button"
+            class="btn btn-xs btn-outline btn-info"
+            (click)="onUpdate($event, row)"
+          >
+            Edit
+          </button>
+          <button
+            *ngIf="showDeleteAction"
+            type="button"
+            class="btn btn-xs btn-outline btn-error"
+            (click)="onDelete($event, row)"
+          >
+            Delete
+          </button>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-footer>
+      <ng-template
+        ngx-datatable-footer-template
+        let-rowCount="rowCount"
+        let-pageSize="pageSize"
+        let-selectedCount="selectedCount"
+        let-curPage="curPage"
+        let-offset="offset"
+      >
+        <div
+          class="entity-table-footer flex items-center justify-between w-full px-4 py-3 bg-base-100 border-t border-base-300"
+        >
+          <div class="text-xs text-base-content/60 font-medium">
+            Showing {{ offset * pageSize + 1 }} to
+            {{ Math.min((offset + 1) * pageSize, rowCount) }} of {{ rowCount }}
+            entries
+          </div>
+
+          <div class="entity-table-footer-controls flex items-center gap-4">
+            <div class="text-sm font-semibold text-base-content">
+              {{ curPage }} of {{ totalPages }}
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                class="btn btn-sm bg-base-200 border-base-300 text-base-content/70 hover:bg-base-300 hover:border-base-300 hover:text-base-content disabled:bg-base-200 disabled:opacity-50"
+                [disabled]="offset === 0"
+                (click)="onPage({ offset: offset - 1 })"
+                aria-label="Previous page"
+              >
+                <span class="material-symbols-outlined text-base pr-1"
+                  >chevron_left</span
+                >
+                <span>Prev</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm bg-base-200 border-base-300 text-base-content/70 hover:bg-base-300 hover:border-base-300 hover:text-base-content disabled:bg-base-200 disabled:opacity-50"
+                [disabled]="curPage >= totalPages"
+                (click)="onPage({ offset: offset + 1 })"
+                aria-label="Next page"
+              >
+                <span>Next</span>
+                <span class="material-symbols-outlined text-base pl-1"
+                  >chevron_right</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
+</div>

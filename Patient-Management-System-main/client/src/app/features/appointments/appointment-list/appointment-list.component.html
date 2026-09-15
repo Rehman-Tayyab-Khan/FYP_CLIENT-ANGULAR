@@ -1,0 +1,171 @@
+<section class="space-y-6 p-6 md:p-8 pt-2 md:pt-4">
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Appointments</h1>
+      <!-- INFO: Real-time record count from server metadata -->
+      <p class="text-sm text-base-content/60 mt-1">
+        {{ totalCount }} records found
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button *ngIf="canExportAppointments" type="button" class="btn btn-outline gap-2" [disabled]="loading"
+        (click)="exportAppointmentsToExcel()">
+        <span class="material-symbols-outlined">download</span>
+        Export Excel
+      </button>
+
+      <a *ngIf="canCreateAppointments" routerLink="new" class="btn btn-primary gap-2 teal-glow">
+        <span class="material-symbols-outlined">event_available</span>
+        New Appointment
+      </a>
+    </div>
+  </div>
+
+  <!-- INFO: Advanced Filtering Section -->
+  <div class="rounded-2xl border border-base-300 bg-base-100 p-5 md:p-6 space-y-4">
+    <div class="flex items-center gap-2">
+      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/60">
+        Appointment Filters
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12">
+      <!-- Patient Name Search (Debounced) -->
+      <label class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          Patient Name
+        </span>
+        <input type="text" class="input input-bordered mt-1 h-10 text-sm" placeholder="Search by name"
+          [(ngModel)]="filters.patient_name" (ngModelChange)="onPatientNameSearch($event)" />
+      </label>
+
+      <!-- Doctor Name Search (Debounced) -->
+      <label *ngIf="!isDoctorRole" class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          Doctor Name
+        </span>
+        <input type="text" class="input input-bordered mt-1 h-10 text-sm" placeholder="Search by doctor"
+          [(ngModel)]="filters.doctor_name" (ngModelChange)="onDoctorNameSearch($event)" />
+      </label>
+
+      <!-- Specialty Filter -->
+      <label *ngIf="!isDoctorRole" class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          Specialty
+        </span>
+        <select class="select select-bordered mt-1 h-10 min-h-0 text-sm" [(ngModel)]="filters.specialty_id"
+          (ngModelChange)="onFilterChange()">
+          <option [ngValue]="undefined">All Specialties</option>
+          <option *ngFor="let spec of specialties" [ngValue]="spec.id">
+            {{ spec.name }}
+          </option>
+        </select>
+      </label>
+
+      <!-- Appointment Type Filter -->
+      <label class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          Type
+        </span>
+        <select class="select select-bordered mt-1 h-10 min-h-0 text-sm capitalize"
+          [(ngModel)]="filters.appointment_type" (ngModelChange)="onFilterChange()">
+          <option [ngValue]="undefined">All Types</option>
+          <option *ngFor="let type of appointmentTypeOptions" [ngValue]="type">
+            {{ type }}
+          </option>
+        </select>
+      </label>
+
+      <!-- Status Filter -->
+      <label class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          Status
+        </span>
+        <select class="select select-bordered mt-1 h-10 min-h-0 text-sm capitalize" [(ngModel)]="filters.status"
+          (ngModelChange)="onFilterChange()">
+          <option [ngValue]="undefined">All Status</option>
+          <option *ngFor="let status of statusOptions" [ngValue]="status" class="capitalize">
+            {{ status.replaceAll("_", " ") | titlecase }}
+          </option>
+        </select>
+      </label>
+
+      <!-- Practice Location Filter -->
+      <label class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          Location
+        </span>
+        <select class="select select-bordered mt-1 h-10 min-h-0 text-sm" [(ngModel)]="filters.practice_location_id"
+          (ngModelChange)="onFilterChange()">
+          <option [ngValue]="undefined">All Locations</option>
+          <option *ngFor="let loc of locations" [ngValue]="loc.id">
+            {{ loc.name }}
+          </option>
+        </select>
+      </label>
+
+      <!-- Date From (Debounced) -->
+      <label class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          From Date
+        </span>
+        <input type="date" class="input input-bordered mt-1 h-10 text-sm" [(ngModel)]="filters.date_from"
+          (ngModelChange)="onDateRangeChange()" />
+      </label>
+
+      <!-- Date To (Debounced) -->
+      <label class="form-control xl:col-span-2">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          To Date
+        </span>
+        <input type="date" class="input input-bordered mt-1 h-10 text-sm" [(ngModel)]="filters.date_to"
+          (ngModelChange)="onDateRangeChange()" />
+      </label>
+
+      <!-- Reset Filters -->
+      <label class="form-control xl:col-span-1">
+        <span class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/0">
+          Reset
+        </span>
+        <button type="button" class="btn btn-outline h-10 mt-1" (click)="resetFilters()">
+          Reset
+        </button>
+      </label>
+    </div>
+  </div>
+
+  <!-- INFO: Paginated Data Table with Server-Side events -->
+  <app-entity-table [columns]="columns" [rows]="appointments" [loading]="loading" [totalCount]="totalCount"
+    [pageSize]="pageSize" [pageOffset]="currentPage - 1" [showUpdateAction]="canUpdateAppointments"
+    [showDeleteAction]="canDeleteAppointments" (rowSelected)="onRowSelected($event)"
+    (updateRequested)="openUpdateModal($event)" (deleteRequested)="openDeleteModal($event)"
+    (pageChanged)="onPageChange($event)" />
+</section>
+
+<!-- INFO: Update Appointment Modal -->
+<div class="modal" [class.modal-open]="isUpdateModalOpen">
+  <div class="modal-box max-w-5xl p-0 overflow-hidden bg-base-100 rounded-2xl shadow-2xl border border-base-300">
+    <div class="modal-header p-6 border-b border-base-300 flex justify-between items-center bg-base-200/50">
+      <div>
+        <h3 class="text-xl font-bold text-base-content">Edit Appointment</h3>
+        <p class="text-xs text-base-content/60 mt-0.5">
+          Update appointment details
+        </p>
+      </div>
+      <button type="button" (click)="closeUpdateModal()" class="p-2 hover:bg-base-300 rounded-full transition-colors">
+        <span class="material-symbols-outlined text-base-content/70">close</span>
+      </button>
+    </div>
+
+    <div class="max-h-[80vh] p-5 overflow-y-auto bg-base-100">
+      <app-appointment-form *ngIf="isUpdateModalOpen" [appointmentToEdit]="selectedAppointment"
+        (formSuccess)="onUpdateSuccess($event)" (formCancel)="closeUpdateModal()" />
+    </div>
+  </div>
+</div>
+
+<!-- INFO: Delete Confirmation Modal  -->
+<app-confirm-dialog [open]="isDeleteModalOpen" [title]="'Cancel Appointment'" [message]="
+    'Are you sure you want to cancel this appointment? This action cannot be undone.'
+  " [confirmLabel]="'Yes, Cancel Appointment'" [cancelLabel]="'No, Keep It'" [loading]="isDeleting" [variant]="'error'"
+  (openChange)="isDeleteModalOpen = $event" (confirmed)="cancelAppointment()" />

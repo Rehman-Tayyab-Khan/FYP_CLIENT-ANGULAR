@@ -1,0 +1,254 @@
+<div class="flex-1 w-full max-w-6xl mx-auto p-6 md:p-8 space-y-6">
+  <div
+    *ngIf="loading"
+    class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70"
+  >
+    Loading case details...
+  </div>
+
+  <div *ngIf="!loading && caseRecord as c">
+    <div class="flex items-center justify-between gap-4 mt-8">
+      <div class="flex items-center gap-6">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="btn btn-ghost btn-circle"
+          title="Back to Cases"
+        >
+          <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+
+        <div class="space-y-1">
+          <p
+            class="text-xs uppercase tracking-widest font-semibold text-base-content/60"
+          >
+            Case Profile
+          </p>
+          <h1 class="text-2xl md:text-3xl font-bold text-base-content">
+            {{ c.case_number }}
+          </h1>
+          <p class="text-sm text-base-content/70">Patient: {{ patientName }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="badge badge-outline uppercase"
+          [ngClass]="statusBadgeClass"
+        >
+          {{ c.case_status || "-" }}
+        </span>
+      </div>
+    </div>
+
+    <section
+      class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Category
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ c.category || "-" }}
+          </p>
+        </div>
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Type
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ c.case_type || "-" }}
+          </p>
+        </div>
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Priority
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ c.priority || "-" }}
+          </p>
+        </div>
+        <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+          <p class="text-xs uppercase tracking-wide text-base-content/60">
+            Opened
+          </p>
+          <p class="text-lg font-semibold text-base-content">
+            {{ c.opening_date | date: "mediumDate" }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <section
+        class="xl:col-span-2 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm space-y-6"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Clinical Summary
+          </h2>
+          <div
+            class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-2"
+          >
+            <p class="text-xs uppercase tracking-wide text-base-content/60">
+              Purpose of Visit
+            </p>
+            <p class="font-medium text-base-content">
+              {{ c.purpose_of_visit || "-" }}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Timeline</h2>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Date of Incident
+              </p>
+              <p class="font-medium text-base-content">
+                {{
+                  c.date_of_accident
+                    ? (c.date_of_accident | date: "mediumDate")
+                    : "-"
+                }}
+              </p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Opening Date
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.opening_date | date: "mediumDate" }}
+              </p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Closing Date
+              </p>
+              <p class="font-medium text-base-content">
+                {{
+                  c.closing_date ? (c.closing_date | date: "mediumDate") : "-"
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Referral Notes
+          </h2>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Referred By
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.referred_by || "-" }}
+              </p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Referred Doctor
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.referred_doctor_name || "-" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Clinical Notes
+          </h2>
+          <div class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="font-medium text-base-content whitespace-pre-wrap">
+              {{ c.clinical_notes || "-" }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm space-y-6"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Related Entities
+          </h2>
+          <div
+            class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-3"
+          >
+            <div>
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Patient
+              </p>
+              <p class="font-medium text-base-content">{{ patientName }}</p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Practice Location
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.practiceLocation?.location_name || "-" }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Insurance
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.insurance?.insurance_name || "-" }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Legal Firm
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.firm?.firm_name || "-" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">
+            Audit Metadata
+          </h2>
+          <div
+            class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-3"
+          >
+            <div>
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Created
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.created_at ? (c.created_at | date: "medium") : "-" }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-base-content/60">
+                Updated
+              </p>
+              <p class="font-medium text-base-content">
+                {{ c.updated_at ? (c.updated_at | date: "medium") : "-" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div *ngIf="!caseRecord && !loading">
+    <div
+      class="rounded-xl border border-error/30 bg-error/10 p-6 text-sm text-error"
+    >
+      Case record was not found.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="p-6 space-y-6">
+  <!-- Header Section -->
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Firms</h1>
+      <p class="text-sm text-base-content/60 mt-1">{{ totalCount }} records found</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button
+        class="btn btn-primary gap-2 teal-glow"
+        (click)="exportExcel()"
+        [disabled]="loading"
+      >
+        <span class="material-symbols-outlined">download</span>
+        Export Excel
+      </button>
+      <a routerLink="create" class="btn btn-primary gap-2 teal-glow">
+        <span class="material-symbols-outlined">add</span>
+        Add Firm
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="card bg-base-100 shadow-xl border border-base-200">
+    <div class="card-body p-4">
+      <div class="flex flex-wrap items-center gap-8">
+        <!-- Search -->
+        <div class="flex items-center gap-3 flex-1 min-w-[300px]">
+          <span class="text-xs font-bold uppercase text-base-content/60 whitespace-nowrap">Search</span>
+          <input type="text" class="input input-bordered h-10 w-full focus:input-primary transition-all text-sm"
+            [ngModel]="filters.search || ''" (ngModelChange)="onSearch($event)"
+            placeholder="Search by firm name, contact person or phone" />
+        </div>
+
+        <!-- Status -->
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold uppercase text-base-content/60 whitespace-nowrap">Status</span>
+          <select class="select select-bordered h-10 min-h-0 focus:select-primary transition-all text-sm min-w-[160px]"
+            [(ngModel)]="filters.is_active" (ngModelChange)="onFilterChange()">
+            <option [ngValue]="undefined">All Status</option>
+            <option [ngValue]="true">Active Only</option>
+            <option [ngValue]="false">Inactive Only</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- List Section -->
+  <div class="card bg-base-100 shadow-xl border border-base-200 overflow-visible">
+    <div class="card-body p-0">
+      <app-entity-table [columns]="columns" [rows]="firms" [loading]="loading" [totalCount]="totalCount"
+        [pageSize]="pageSize" [pageOffset]="currentPage - 1" [showDeleteAction]="false"
+        (rowSelected)="onRowSelected($event)" (updateRequested)="onUpdateRequested($event)"
+        (pageChanged)="onPageChange($event)">
+      </app-entity-table>
+    </div>
+  </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal" [class.modal-open]="isUpdateModalOpen">
+  <div class="modal-box max-w-4xl p-0 overflow-hidden bg-base-100 rounded-2xl shadow-2xl border border-base-300">
+    <div class="modal-header p-6 border-b border-base-300 flex justify-between items-center bg-base-200/50">
+      <div>
+        <h3 class="text-xl font-bold text-base-content">Edit Firm</h3>
+        <p class="text-xs text-base-content/60 mt-0.5">Update firm details and status</p>
+      </div>
+      <button (click)="closeUpdateModal()" class="btn btn-ghost btn-sm btn-circle">
+        <i class="ri-close-line text-xl"></i>
+      </button>
+    </div>
+
+    <div class="max-h-[80vh] overflow-y-auto p-6 bg-base-100">
+      <div *ngIf="isLoadingSelectedFirm" class="flex justify-center items-center py-12">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+
+      <app-firm-form *ngIf="!isLoadingSelectedFirm && selectedFirm" [firmToEdit]="selectedFirm"
+        (formSuccess)="onUpdateSuccess()" (formCancel)="closeUpdateModal()"></app-firm-form>
+    </div>
+  </div>
+  <div class="modal-backdrop bg-black/40 backdrop-blur-sm" (click)="closeUpdateModal()"></div>
+</div>

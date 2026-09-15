@@ -1,0 +1,577 @@
+<div class="flex-1 p-8 w-full">
+  <!-- Stepper -->
+  <div class="mb-10">
+    <ul class="steps steps-horizontal w-full">
+      <li class="step" [class.step-primary]="currentStep >= 1">
+        Personal Info
+      </li>
+      <li class="step" [class.step-primary]="currentStep >= 2">
+        Contact &amp; Address
+      </li>
+      <li class="step" [class.step-primary]="currentStep >= 3">
+        Insurance &amp; Review
+      </li>
+    </ul>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm border border-base-300">
+    <div class="card-body">
+      <!-- Step Titles -->
+      <h3 class="card-title" *ngIf="currentStep === 1">
+        Demographic Information
+      </h3>
+      <h3 class="card-title" *ngIf="currentStep === 2">
+        Contact &amp; Address Details
+      </h3>
+      <h3 class="card-title" *ngIf="currentStep === 3">
+        Insurance &amp; Final Review
+      </h3>
+
+      <p class="text-base-content/60" *ngIf="currentStep === 1">
+        Enter the patient's legal identification details as they appear on
+        official documents.
+      </p>
+      <p class="text-base-content/60" *ngIf="currentStep === 2">
+        Capture communication and emergency contact information for care
+        coordination.
+      </p>
+      <p class="text-base-content/60" *ngIf="currentStep === 3">
+        Record insurance metadata and verify all entered details before registry
+        submission.
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-6 space-y-6">
+        <!-- STEP 1: Personal Info -->
+        <div *ngIf="currentStep === 1" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">First Name</span></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('first_name')"
+                formControlName="first_name"
+              />
+              <p
+                *ngIf="isFieldInvalid('first_name')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("first_name") }}
+              </p>
+            </div>
+
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Middle Name</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('middle_name')"
+                formControlName="middle_name"
+                placeholder="Optional"
+              />
+              <p
+                *ngIf="isFieldInvalid('middle_name')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("middle_name") }}
+              </p>
+            </div>
+
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">Last Name</span></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('last_name')"
+                formControlName="last_name"
+              />
+              <p
+                *ngIf="isFieldInvalid('last_name')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("last_name") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Date of Birth</span
+                ></label
+              >
+              <input
+                type="date"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('date_of_birth')"
+                formControlName="date_of_birth"
+              />
+              <p
+                *ngIf="isFieldInvalid('date_of_birth')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("date_of_birth") }}
+              </p>
+            </div>
+
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >CNIC</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full font-mono tracking-widest"
+                [class.input-error]="isFieldInvalid('cnic')"
+                formControlName="cnic"
+                placeholder="12345-1234567-1"
+              />
+              <p
+                *ngIf="isFieldInvalid('cnic')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("cnic") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label"
+              ><span class="label-text font-semibold">Legal Gender</span></label
+            >
+            <div class="flex flex-wrap gap-1 p-1 bg-base-200 rounded-box w-fit">
+              <button
+                *ngFor="let gender of genderOptions"
+                type="button"
+                (click)="selectGender(gender.value)"
+                class="btn btn-sm"
+                [ngClass]="
+                  form.value.gender === gender.value
+                    ? 'btn-primary'
+                    : 'btn-ghost'
+                "
+              >
+                {{ gender.label }}
+              </button>
+            </div>
+            <p
+              *ngIf="isFieldInvalid('gender')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("gender") }}
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 2: Contact & Address -->
+        <div *ngIf="currentStep === 2" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="form-control w-full md:col-span-2">
+              <label class="label"
+                ><span class="label-text font-semibold">Email</span></label
+              >
+              <input
+                type="email"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('email')"
+                formControlName="email"
+              />
+              <p
+                *ngIf="isFieldInvalid('email')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("email") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">Country</span></label
+              >
+              <select
+                class="select select-bordered w-full"
+                [class.select-error]="isFieldInvalid('country')"
+                formControlName="country"
+              >
+                <option value="">Select Country</option>
+                <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+              </select>
+              <p
+                *ngIf="isFieldInvalid('country')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("country") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">Phone</span></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('phone')"
+                formControlName="phone"
+              />
+              <p
+                *ngIf="isFieldInvalid('phone')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("phone") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">Mobile</span></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('mobile')"
+                formControlName="mobile"
+              />
+              <p
+                *ngIf="isFieldInvalid('mobile')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("mobile") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label"
+              ><span class="label-text font-semibold">Address</span></label
+            >
+            <textarea
+              class="textarea textarea-bordered w-full h-24"
+              [class.textarea-error]="isFieldInvalid('address')"
+              formControlName="address"
+            ></textarea>
+            <p
+              *ngIf="isFieldInvalid('address')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("address") }}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">City</span></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('city')"
+                formControlName="city"
+              />
+              <p
+                *ngIf="isFieldInvalid('city')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("city") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">State</span></label
+              >
+              <select
+                class="select select-bordered w-full"
+                [class.select-error]="isFieldInvalid('state')"
+                formControlName="state"
+              >
+                <option value="">Select State</option>
+                <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+              </select>
+              <p
+                *ngIf="isFieldInvalid('state')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("state") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">ZIP Code</span></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('zip_code')"
+                formControlName="zip_code"
+              />
+              <p
+                *ngIf="isFieldInvalid('zip_code')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("zip_code") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Emergency Contact Name</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('emergency_contact_name')"
+                formControlName="emergency_contact_name"
+              />
+              <p
+                *ngIf="isFieldInvalid('emergency_contact_name')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("emergency_contact_name") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Emergency Contact Phone</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('emergency_contact_phone')"
+                formControlName="emergency_contact_phone"
+              />
+              <p
+                *ngIf="isFieldInvalid('emergency_contact_phone')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("emergency_contact_phone") }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Insurance & Review -->
+        <div *ngIf="currentStep === 3" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Primary Physician</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('primary_physician')"
+                formControlName="primary_physician"
+                placeholder="Optional"
+              />
+              <p
+                *ngIf="isFieldInvalid('primary_physician')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("primary_physician") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Preferred Language</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('preferred_language')"
+                formControlName="preferred_language"
+              />
+              <p
+                *ngIf="isFieldInvalid('preferred_language')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("preferred_language") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Insurance Provider</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('insurance_provider')"
+                formControlName="insurance_provider"
+                placeholder="Optional"
+              />
+              <p
+                *ngIf="isFieldInvalid('insurance_provider')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("insurance_provider") }}
+              </p>
+            </div>
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold"
+                  >Insurance Policy Number</span
+                ></label
+              >
+              <input
+                type="text"
+                class="input input-bordered w-full"
+                [class.input-error]="isFieldInvalid('insurance_policy_number')"
+                formControlName="insurance_policy_number"
+                placeholder="Optional"
+              />
+              <p
+                *ngIf="isFieldInvalid('insurance_policy_number')"
+                class="text-xs text-red-500 mt-1"
+              >
+                {{ getFieldErrorMessage("insurance_policy_number") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label"
+              ><span class="label-text font-semibold"
+                >Patient Status</span
+              ></label
+            >
+            <div class="flex flex-wrap gap-1 p-1 bg-base-200 rounded-box w-fit">
+              <button
+                *ngFor="let status of patientStatusOptions"
+                type="button"
+                (click)="selectStatus(status.value)"
+                class="btn btn-sm"
+                [ngClass]="
+                  form.value.patient_status === status.value
+                    ? 'btn-primary'
+                    : 'btn-ghost'
+                "
+              >
+                {{ status.label }}
+              </button>
+            </div>
+            <p
+              *ngIf="isFieldInvalid('patient_status')"
+              class="text-xs text-red-500 mt-1"
+            >
+              {{ getFieldErrorMessage("patient_status") }}
+            </p>
+          </div>
+
+          <!-- Review Snapshot -->
+          <div class="bg-base-200 rounded-box p-5 border border-base-300">
+            <p class="font-bold text-base-content mb-3">Review Snapshot</p>
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-3 text-base-content/80"
+            >
+              <p>
+                <span class="font-semibold text-base-content">Patient:</span>
+                {{ form.value.first_name }} {{ form.value.last_name }}
+              </p>
+              <p>
+                <span class="font-semibold text-base-content">DOB:</span>
+                {{ form.value.date_of_birth }}
+              </p>
+              <p>
+                <span class="font-semibold text-base-content">Gender:</span>
+                {{ form.value.gender }}
+              </p>
+              <p>
+                <span class="font-semibold text-base-content">CNIC:</span>
+                {{ maskedCnic }}
+              </p>
+              <p>
+                <span class="font-semibold text-base-content">Email:</span>
+                {{ form.value.email }}
+              </p>
+              <p>
+                <span class="font-semibold text-base-content">Status:</span>
+                {{ form.value.patient_status }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="divider"></div>
+
+        <div class="flex items-center justify-between">
+          <button
+            *ngIf="currentStep === 1"
+            type="button"
+            (click)="onCancel()"
+            class="btn btn-ghost"
+          >
+            Cancel Registry
+          </button>
+
+          <button
+            *ngIf="currentStep > 1"
+            type="button"
+            (click)="goToPreviousStep()"
+            class="btn btn-ghost gap-2"
+          >
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Previous Step
+          </button>
+
+          <button
+            *ngIf="currentStep < 3"
+            type="button"
+            (click)="goToNextStep()"
+            class="btn btn-primary gap-2"
+          >
+            Continue to {{ currentStep === 1 ? "Contact" : "Insurance" }}
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+
+          <button
+            *ngIf="currentStep === 3"
+            type="submit"
+            [disabled]="isSubmitting"
+            class="btn btn-primary gap-2"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="loading loading-spinner loading-xs"
+            ></span>
+            {{
+              isSubmitting
+                ? isEditMode
+                  ? "Updating..."
+                  : "Saving..."
+                : isEditMode
+                  ? "Update Patient"
+                  : "Submit Registry"
+            }}
+            <span class="material-symbols-outlined text-sm">check_circle</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

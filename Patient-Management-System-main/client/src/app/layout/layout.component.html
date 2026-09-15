@@ -1,0 +1,42 @@
+<div class="relative min-h-screen bg-base-200 text-base-content">
+  <app-sidebar
+    [isCollapsed]="isSidebarCollapsed"
+    [isMobileOpen]="isSidebarMobileOpen"
+    (toggleCollapse)="toggleSidebarCollapse()"
+    (closeMobile)="closeMobileSidebar()"
+  ></app-sidebar>
+
+  <button
+    *ngIf="isSidebarMobileOpen"
+    type="button"
+    class="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-[1px] lg:hidden"
+    (click)="closeMobileSidebar()"
+    aria-label="Close sidebar overlay"
+  ></button>
+
+  <header
+    class="sticky top-0 z-30 flex items-center justify-between border-b border-base-300 bg-base-100 px-4 py-3 lg:hidden"
+  >
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm"
+      (click)="toggleMobileSidebar()"
+      aria-label="Open sidebar"
+    >
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <div class="text-sm font-bold tracking-wide text-base-content">Smart HMS</div>
+    <div class="w-9"></div>
+  </header>
+
+  <main
+    class="min-h-screen p-4 pt-3 transition-all duration-300 sm:p-6 sm:pt-4"
+    [ngClass]="isSidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'"
+  >
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-chatbot *ngIf="showChatbot()"></app-chatbot>
+
+</div>

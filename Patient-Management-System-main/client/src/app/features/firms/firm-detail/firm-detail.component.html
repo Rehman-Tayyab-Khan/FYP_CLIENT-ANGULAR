@@ -1,0 +1,115 @@
+<div class="flex-1 w-full max-w-6xl mx-auto p-6 md:p-8 space-y-6">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70">
+    <div class="flex items-center gap-3">
+      <span class="loading loading-spinner loading-sm"></span>
+      Loading firm details...
+    </div>
+  </div>
+
+  <div *ngIf="!loading && firm">
+    <!-- Header with Back Button -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8 mb-6">
+      <div class="flex items-center gap-6">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="btn btn-ghost btn-circle"
+          title="Back to Firms"
+        >
+          <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+        <div class="space-y-1">
+          <p class="text-xs uppercase tracking-widest font-semibold text-base-content/60">
+            Firm Profile
+          </p>
+          <h1 class="text-2xl md:text-3xl font-bold text-base-content">
+            {{ firm.firm_name }}
+          </h1>
+          <p class="text-sm text-base-content/70">Firm ID: {{ firm.id }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="badge badge-success badge-outline uppercase" *ngIf="firm.is_active">Active</span>
+        <span class="badge badge-ghost badge-outline uppercase" *ngIf="!firm.is_active">Inactive</span>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <section class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm mb-6">
+      <div class="flex flex-col md:flex-row md:items-center gap-6">
+        <div class="w-16 h-16 rounded-2xl bg-primary text-primary-content grid place-content-center text-xl font-bold">
+          {{ initials }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">Firm Type</p>
+            <p class="text-lg font-semibold text-base-content capitalize">{{ firm.firm_type }}</p>
+          </div>
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">Contact Person</p>
+            <p class="text-lg font-semibold text-base-content">{{ firm.contact_person }}</p>
+          </div>
+          <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="text-xs uppercase tracking-wide text-base-content/60">Registered</p>
+            <p class="text-lg font-semibold text-base-content">{{ firm.created_at | date: "mediumDate" }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Detailed Info -->
+      <section class="lg:col-span-2 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm space-y-6">
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Contact Information</h2>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">Phone</p>
+              <p class="font-medium text-base-content">{{ firm.phone || "-" }}</p>
+            </div>
+            <div class="rounded-xl bg-base-200 border border-base-300 p-4">
+              <p class="text-xs uppercase tracking-wide text-base-content/60">Email</p>
+              <p class="font-medium text-base-content break-all">{{ firm.email || "-" }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Office Address</h2>
+          <div class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4">
+            <p class="font-medium text-base-content leading-relaxed">
+              {{ firm.address }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar Info -->
+      <section class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm space-y-6">
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Status History</h2>
+          <div class="mt-4 rounded-xl bg-base-200 border border-base-300 p-4 space-y-4">
+            <div>
+              <p class="text-xs text-base-content/50 uppercase tracking-tighter">Last Updated</p>
+              <p class="font-medium">{{ firm.updated_at | date: "medium" }}</p>
+            </div>
+            <div class="divider my-0"></div>
+            <p class="text-sm text-base-content/70 italic">
+              Partner is currently marked as <span class="font-bold">{{ firm.is_active ? 'Active' : 'Inactive' }}</span> for clinical operations.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Not Found State -->
+  <div *ngIf="!firm && !loading">
+    <div class="rounded-xl border border-error/30 bg-error/10 p-6 text-sm text-error">
+      Firm record was not found or you don't have permission to view it.
+    </div>
+  </div>
+</div>

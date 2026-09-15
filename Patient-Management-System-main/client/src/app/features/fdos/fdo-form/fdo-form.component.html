@@ -1,0 +1,233 @@
+<div class="p-5 space-y-6">
+  <div
+    *ngIf="loading"
+    class="rounded-xl border border-base-300 bg-base-100 p-6 text-sm text-base-content/70"
+  >
+    Loading FDO profile and permissions...
+  </div>
+
+  <form
+    *ngIf="!loading"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="space-y-6"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            First Name
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('first_name')"
+          formControlName="first_name"
+        />
+        <p
+          *ngIf="isFieldInvalid('first_name')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("first_name") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Last Name
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('last_name')"
+          formControlName="last_name"
+        />
+        <p
+          *ngIf="isFieldInvalid('last_name')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("last_name") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Phone
+          </span>
+        </label>
+        <input
+          type="text"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('phone')"
+          formControlName="phone"
+        />
+        <p *ngIf="isFieldInvalid('phone')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("phone") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Status
+          </span>
+        </label>
+        <select
+          class="select select-bordered h-10 min-h-0 text-sm w-full"
+          [class.select-error]="isFieldInvalid('is_active')"
+          formControlName="is_active"
+        >
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+        <p
+          *ngIf="isFieldInvalid('is_active')"
+          class="text-xs text-red-500 mt-1"
+        >
+          {{ getFieldErrorMessage("is_active") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            Email
+          </span>
+        </label>
+        <input
+          type="email"
+          class="input input-bordered h-10 text-sm w-full"
+          [class.input-error]="isFieldInvalid('email')"
+          maxlength="100"
+          formControlName="email"
+        />
+        <p *ngIf="isFieldInvalid('email')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("email") }}
+        </p>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label pb-1">
+          <span
+            class="label-text text-xs font-semibold uppercase tracking-wide text-base-content/60"
+          >
+            {{ mode === "create" ? "Password" : "New Password" }}
+          </span>
+        </label>
+        <input
+          type="password"
+          class="input input-bordered h-10 text-sm w-full"
+          formControlName="password"
+          [class.input-error]="isFieldInvalid('password')"
+          maxlength="100"
+          autocomplete="new-password"
+          [placeholder]="
+            mode === 'edit' ? 'Leave blank to keep current password' : ''
+          "
+        />
+        <span class="label" *ngIf="mode === 'edit'">
+          <span class="label-text-alt text-xs text-base-content/60">
+            Optional. Use 6 to 100 characters.
+          </span>
+        </span>
+        <p *ngIf="isFieldInvalid('password')" class="text-xs text-red-500 mt-1">
+          {{ getFieldErrorMessage("password") }}
+        </p>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h3 class="text-base font-semibold text-base-content">
+          Permission Matrix
+        </h3>
+        <span class="badge badge-outline whitespace-nowrap">
+          {{ selectedPermissionsCount }} selected
+        </span>
+      </div>
+
+      <div class="space-y-3">
+        <div
+          *ngFor="let group of permissionGroups"
+          class="rounded-xl border border-base-300 bg-base-100 p-4"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-semibold text-sm">{{ group.title }}</span>
+            <span class="badge badge-ghost">{{
+              group.permissions.length
+            }}</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <label
+              *ngFor="let permission of group.permissions"
+              class="label cursor-pointer justify-start gap-3 rounded-lg px-3 py-2 border border-base-300 bg-base-200"
+            >
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm"
+                [checked]="isPermissionSelected(permission.id)"
+                (change)="
+                  togglePermission(permission.id, $any($event.target).checked)
+                "
+              />
+              <div>
+                <p class="text-sm font-medium">
+                  {{ permissionActionLabel(permission.permission_name) }}
+                  {{ permissionTargetLabel(permission.permission_name) }}
+                </p>
+                <p class="text-xs text-base-content/60">
+                  {{ displayPermissionName(permission.permission_name) }}
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="isPermissionInvalid" class="text-xs text-red-500 mt-1">
+        At least one permission is required.
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex items-center justify-end gap-3">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        <span
+          *ngIf="isSubmitting"
+          class="loading loading-spinner loading-xs"
+        ></span>
+        {{
+          isSubmitting
+            ? "Saving..."
+            : mode === "create"
+              ? "Create FDO"
+              : "Save Changes"
+        }}
+      </button>
+    </div>
+  </form>
+</div>

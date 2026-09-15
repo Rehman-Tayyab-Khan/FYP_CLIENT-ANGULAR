@@ -1,0 +1,68 @@
+<div class="card bg-base-100 shadow-md">
+  <div class="card-body">
+    <h1 class="text-xl font-bold mb-4">Create User</h1>
+
+    <form
+      [formGroup]="createUserForm"
+      (ngSubmit)="onSubmit()"
+      class="space-y-4"
+    >
+      <div>
+        <label class="label" for="first_name">First Name</label>
+        <input
+          id="first_name"
+          formControlName="first_name"
+          type="text"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div>
+        <label class="label" for="last_name">Last Name</label>
+        <input
+          id="last_name"
+          formControlName="last_name"
+          type="text"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div>
+        <label class="label" for="email">Email</label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div>
+        <label class="label" for="role">Role</label>
+        <select
+          id="role"
+          formControlName="role"
+          class="select select-bordered w-full"
+        >
+          <option value="admin">Admin</option>
+          <option value="doctor">Doctor</option>
+          <option value="fdo">Front Desk Officer</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="label" for="password">Password</label>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        {{ isLoading ? "Saving..." : "Create User" }}
+      </button>
+    </form>
+  </div>
+</div>
