@@ -1,0 +1,40 @@
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# JavaScript / TypeScript dependencies and generated output
+node_modules/
+dist/
+coverage/
+.angular/
+tmp/
+out-tsc/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# PHP / Laravel dependencies and generated files
+vendor/
+public/build/
+public/hot
+public/storage
+storage/*.key
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*.php
+!bootstrap/cache/.gitignore
+
+# IDE and operating-system files
+.idea/
+.vscode/
+.fleet/
+.nova/
+.zed/
+.DS_Store
+Thumbs.db
+*.log
+*.pid
+*.swp
